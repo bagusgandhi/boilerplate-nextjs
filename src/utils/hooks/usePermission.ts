@@ -5,7 +5,6 @@ export const useHasPermission = ({
   requiredPermission?: string[];
   session: any | null | undefined;
 }): boolean => {
-  // console.log("from usePermission", session);
 
   if (!session?.user?.role?.permissions) {
     return false;
