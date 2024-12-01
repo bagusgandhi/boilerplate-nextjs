@@ -156,10 +156,10 @@ export default function TableListMaintenance({ handlersModal }: any) {
           dataSource={[]}
           columns={columns}
           onChange={(pagination, filters, sorter, extra) => {
-            dispatch({
-              type: "set filter.roleId",
-              payload: filters.roles
-            });
+            // dispatch({
+            //   type: "set filter.roleId",
+            //   payload: filters.roles
+            // });
 
           }}
           // pagination={{

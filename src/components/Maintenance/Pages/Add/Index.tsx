@@ -1,17 +1,42 @@
 "use client";
 import { useImmerReducer } from "use-immer";
 import React, { createContext, useEffect } from "react";
-import { Button, Flex, Form, Input, Spin, Steps } from "antd";
-import { PlusOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import {
+  Button,
+  Card,
+  Col,
+  Flex,
+  Form,
+  Input,
+  Row,
+  Select,
+  Spin,
+  Steps,
+  Table,
+  Typography,
+} from "antd";
+import {
+  ArrowRightOutlined,
+  PlusOutlined,
+  PrinterOutlined,
+  SearchOutlined,
+  UndoOutlined,
+} from "@ant-design/icons";
 import TableListMaintenance from "../../Table/TableListMaintenance";
 import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
+import { useRouter } from "next/navigation";
+import Title from "antd/es/typography/Title";
+import moment from "moment";
+
+const { Text } = Typography;
 
 export default function MaintenanceAdd({ session }: any) {
   const [state, dispatch] = useImmerReducer(stateReducer, initialState);
   const [openedModal, handlersModal] = useDisclosure(false);
   const [form] = Form.useForm();
+  const router = useRouter();
 
   const resFlow = useSWRFetcher<any>({
     key: [`api/flow`],
@@ -23,15 +48,35 @@ export default function MaintenanceAdd({ session }: any) {
   });
 
   const resAsset = useSWRFetcher<any>({
-    key: state.filter.search && [`api/asset`],
+    key: [`api/asset`],
     axiosOptions: {
       params: {
         viewAll: true,
-        search: state.filter.search,
-        asset_type: 'Gerbong',
+        asset_type: "Gerbong",
       },
     },
   });
+
+  const resAssetDetail = useSWRFetcher<any>({
+    key: state.filter.assetId && [`api/asset/${state.filter.assetId}`],
+  });
+
+  let dataSource = resAssetDetail.data?.children?.flatMap(
+    (item: any) => item.children
+  ).map(({ children, ...rest }: any) => ({key: rest.id, ...rest}))
+
+  // const defaultSelectedRowKeys = dataSource?.filter((item: any) => item.status === "active")
+  // .map((item: any) => item.key);
+  // console.log(dataSource)
+
+  // const rowSelection = {
+  //   selectedRowKeys: defaultSelectedRowKeys,
+    // getCheckboxProps: (record: any) => ({
+    //   disabled: true, // Disable the checkbox for all rows (no interaction)
+    // }),
+  // };
+
+  // console.log("flatMap", resAssetDetail.data?.children?.flatMap((item: any) => item.children));
 
   useEffect(() => {
     resAsset.mutate();
@@ -41,6 +86,49 @@ export default function MaintenanceAdd({ session }: any) {
     title: item.name,
     description: item.description,
   }));
+
+  const columns: any = [
+    {
+      title: "ID Wheel",
+      dataIndex: "name",
+      key: "name",
+      render: (text: any) => {
+        return text ?? "-";
+      },
+    },
+    {
+      title: "Bogie",
+      dataIndex: ["parent_asset", "bogie"],
+      key: ["parent_asset", "bogie"],
+      render: (text: any) => {
+        return text ? `Bogie ${text}` : "-";
+      },
+    },
+    {
+      title: "Tanggal",
+      dataIndex: "updated_at",
+      key: "updated_at",
+      render: (text: any) => {
+        return text ? moment(text).format("DD-MM-YYYY") : "-";
+      },
+    },
+    {
+      title: "Diameter",
+      dataIndex: "paramsValue",
+      key: "paramsValue",
+      render: (text: any) => {
+        return text ? text.diameter : "-";
+      },
+    },
+    {
+      title: "Flank",
+      dataIndex: "paramsValue",
+      key: "paramsValue",
+      render: (text: any) => {
+        return text ? text.flank : "-";
+      },
+    },
+  ];
 
   return (
     <>
@@ -57,11 +145,11 @@ export default function MaintenanceAdd({ session }: any) {
               current={state.stepperStats}
               items={stepperItem ?? []}
             />
-            <Form 
-              layout="horizontal" 
-              form={form} 
+            <Form
+              layout="horizontal"
+              form={form}
               onFinish={(value) => {
-                dispatch({ type: "set filter.search", payload: value.search });
+                dispatch({ type: "set filter.assetId", payload: value.search });
               }}
             >
               <Flex align="center" justify="space-between" gap={10}>
@@ -70,23 +158,115 @@ export default function MaintenanceAdd({ session }: any) {
                   name="search"
                   style={{ flex: 1, width: "100%" }}
                 >
-                  <Input type="text" placeholder="Masukan ID Gerbong" />
+                  {/* <Input type="text" placeholder="Masukan ID Gerbong" /> */}
+                  <Select
+                    showSearch
+                    allowClear
+                    loading={resAsset?.isLoading}
+                    placeholder="Masukan ID Gerbong"
+                    filterOption={(input: any, option: any) =>
+                      (option?.label ?? "")
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    options={resAsset?.data?.results?.map((item: any) => ({
+                      label: item.name,
+                      value: item.id,
+                    }))}
+                    onChange={(value: any) => {
+                      if (value) {
+                        form.setFieldsValue({ search: value });
+                      } else {
+                        form.setFieldsValue({ search: undefined });
+                        dispatch({
+                          type: "set filter.assetId",
+                          payload: undefined,
+                        });
+                      }
+                    }}
+                  />
                 </Form.Item>
                 <Form.Item>
                   <Button
-                    loading={resAsset?.isLoading}
+                    loading={resAssetDetail?.isLoading}
                     htmlType="submit"
-                    icon={<SearchOutlined />}>
-                      Cek ID
+                    icon={<SearchOutlined />}
+                  >
+                    Cek ID
                   </Button>
                 </Form.Item>
                 <Form.Item>
-                  <Button icon={<PlusOutlined />} type="primary">
+                  <Button
+                    icon={<PlusOutlined />}
+                    disabled={resAssetDetail?.isLoading}
+                    type="primary"
+                    onClick={() =>
+                      router.push("/dashboard/sparepart-management")
+                    }
+                  >
                     Daftar Data Baru
                   </Button>
                 </Form.Item>
               </Flex>
             </Form>
+
+            {resAssetDetail?.data && (
+              <Row gutter={[16, 16]}>
+                {/* information step inisialisasi */}
+                <Col xs={12}>
+                  <Card
+                    title="Nomor Train Set"
+                    style={{ marginBottom: "16px" }}
+                  >
+                    <Title level={3}>
+                      {resAssetDetail?.data?.parent_asset?.name}
+                    </Title>
+                  </Card>
+
+                  <Card
+                    title="Nomor Gerbong"
+                    style={{ marginBottom: "16px" }}
+                    extra={<a href="#">More</a>}
+                  >
+                    <Text
+                      copyable
+                      style={{ fontSize: "24px", fontWeight: "bold" }}
+                    >
+                      {resAssetDetail?.data?.name}
+                    </Text>
+                  </Card>
+
+                  <Card
+                    title="Riwayat"
+                    style={{ marginBottom: "16px" }}
+                    extra={<a href="#">More</a>}
+                  >
+                    <p className="text-sm">Aktivitas Terakhir</p>
+                  </Card>
+                </Col>
+
+                {/* list Keping Roda */}
+                <Col xs={12}>
+                  <Table
+                    columns={columns}
+                    dataSource={
+                      resAssetDetail.data?.children?.flatMap(
+                        (item: any) => item.children
+                      ).map(({ children, ...rest }: any) => rest) ?? []
+                    }
+                    pagination={false}
+                  />
+                </Col>
+
+                {/* button control stepper */}
+                <Col xs={24}>
+                  <Flex gap={10} justify={"flex-end"} align={"center"}>
+                    <Button icon={<PrinterOutlined />}>Cetak</Button>
+                    <Button icon={<ArrowRightOutlined />}>Lanjut</Button>
+                  </Flex>
+                </Col>
+              </Row>
+            )}
           </div>
         </Spin>
       </MaintenanceAddContext.Provider>
@@ -100,7 +280,7 @@ interface initialStateType {
   loading: boolean;
   stepperStats: number;
   filter: {
-    search: string | undefined;
+    assetId: string | undefined;
     flow: string | undefined;
   };
 }
@@ -109,15 +289,15 @@ const initialState: initialStateType = {
   loading: false,
   stepperStats: 0,
   filter: {
-    search: undefined,
+    assetId: undefined,
     flow: undefined,
   },
 };
 
 function stateReducer(draft: any, action: any) {
   switch (action.type) {
-    case "set filter.search":
-      draft.filter.search = action.payload;
+    case "set filter.assetId":
+      draft.filter.assetId = action.payload;
       break;
     case "set filter.flow":
       draft.filter.flow = action.payload;

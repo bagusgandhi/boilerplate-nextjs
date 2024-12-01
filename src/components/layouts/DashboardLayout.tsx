@@ -184,7 +184,7 @@ export default function DashboardLayout({
               <Menu
                 style={{ background: "#ffffff", borderRight: "0px" }}
                 theme="light"
-                defaultSelectedKeys={[pathname]}
+                selectedKeys={[pathname]}
                 mode="inline"
                 items={items}
               />
