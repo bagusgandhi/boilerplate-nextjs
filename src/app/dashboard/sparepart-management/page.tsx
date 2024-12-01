@@ -1,9 +1,10 @@
-import React from "react";
+import SparepartList from '@/components/SparepartManagement/Pages/Index';
+import { authOptions } from '@/lib/authOptions';
+import { Breadcrumb } from 'antd'
 import Title from "antd/es/typography/Title";
-import ManageUser from "@/components/ManageUsers/Pages/Users/Index";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authOptions";
-import { Breadcrumb } from "antd";
+import { getServerSession } from 'next-auth';
+
+import React from 'react'
 
 export default async function page() {
   const session = await getServerSession(authOptions);
@@ -14,16 +15,15 @@ export default async function page() {
         <Breadcrumb
           items={[
             { title: "Dashboard", href: "/dashboard" }, 
-            { title: "Manage Users", href: "/dashboard/manage-users" }
-          ]}
+            { title: "Sparepart Management", href: "/dashboard/sparepart-management" }]}
           style={{ margin: "16px 0" }}
         />
-        <Title level={4}>Manage Users</Title>
+        <Title level={4}>Sparepart Management</Title>
       </div>
 
       <div className="px-8">
-        <ManageUser session={session} />
+        <SparepartList session={session} />
       </div>
     </>
-  );
+  )
 }

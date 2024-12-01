@@ -97,10 +97,6 @@ export default function ModalUser({
       const data: any = {
         data: {
           ...values,
-          // name: values.name,
-          // email: values.email,
-          // password: values.password,
-          // roleId: values.roleId,
         },
       };
 

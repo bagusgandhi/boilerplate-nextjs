@@ -36,8 +36,8 @@ export const authOptions = {
 
         const user = response.data;
 
-        // console.log("credentials", credentials)
-        // console.log("response", response)
+        console.log("credentials", credentials)
+        console.log("response", response)
 
         if (!user) return null;
 
