@@ -10,8 +10,8 @@ import { useHasPermission } from "@/utils/hooks/usePermission";
 export default function TableListMaintenance({ handlersModal }: any) {
   const {
     state: [state, dispatch],
-    // resTable,
-    session
+    resMaintenance,
+    session,
   }: any = useContext(MaintenanceListContext);
 
   // const canUpdateUser = useHasPermission({
@@ -55,6 +55,8 @@ export default function TableListMaintenance({ handlersModal }: any) {
   //   value: role.id,
   // }));
 
+  // console.log(resMaintenance);
+
   const columns = [
     {
       title: "No",
@@ -65,22 +67,18 @@ export default function TableListMaintenance({ handlersModal }: any) {
     },
     {
       title: "Spare Part",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: ["asset", "asset_type"],
+      key: "asset_type",
     },
     {
       title: "ID",
-      dataIndex: "email",
-      key: "email",
+      dataIndex: ["asset", "name"],
+      key: "name",
     },
     {
       title: "Phase",
-      dataIndex: "flow",
+      dataIndex: ["flow", "name"],
       key: "flow",
-      // filters: filterRole,
-      // render: (record: any) => {
-      //   return record?.[0]?.name ?? "-";
-      // },
     },
     {
       title: "Action",
@@ -90,48 +88,33 @@ export default function TableListMaintenance({ handlersModal }: any) {
       render: (record: any) => {
         return (
           <div className="flex gap-2">
-            {/* {canUpdateUser &&(<Button
+            <Button
               onClick={() => {
-                dispatch({
-                  type: "set formType",
-                  payload: "edit",
-                });
-                dispatch({
-                  type: "set userId",
-                  payload: record.id,
-                });
-                handlersModal.open();
+                console.log(record?.asset?.id);
               }}
               size="small"
               icon={<EditOutlined />}
             >
               Edit
-            </Button>)}
-            {canDeleteUser && (<Popconfirm
+            </Button>
+            <Popconfirm
               placement="bottom"
               title={"Warning"}
-              description={'Are you sure to delete "' + record.name + '" ?'}
+              description={'Are you sure to delete this maintenance ?'}
               okText="Yes"
               cancelText="No"
               onConfirm={async () => {
-                await deleteUser.trigger();
-                await resTable.mutate();
+                console.log(record?.asset?.id);
               }}
             >
               <Button
-                onClick={() => {
-                  dispatch({
-                    type: "set userId",
-                    payload: record.id,
-                  });
-                }}
                 danger
                 size="small"
                 icon={<DeleteOutlined />}
               >
                 Delete
               </Button>
-            </Popconfirm>)} */}
+            </Popconfirm>
           </div>
         );
       },
@@ -144,39 +127,30 @@ export default function TableListMaintenance({ handlersModal }: any) {
 
   return (
     <>
-      <Spin size="large" 
-        // spinning={resTable?.isLoading}
-        spinning={false}
-      >
+      <Spin size="large" spinning={resMaintenance?.isLoading}>
         <Table
-          // dataSource={resTable?.data?.results?.map((item: any) => ({
-          //   ...item,
-          //   key: item.id,
-          // }))}
-          dataSource={[]}
+          dataSource={
+            resMaintenance?.data?.results?.map((item: any) => ({
+              ...item,
+              key: item.id,
+            })) ?? []
+          }
           columns={columns}
-          onChange={(pagination, filters, sorter, extra) => {
-            // dispatch({
-            //   type: "set filter.roleId",
-            //   payload: filters.roles
-            // });
-
+          pagination={{
+            current: state.pagination.page,
+            pageSize: state.pagination.limit,
+            total: resMaintenance?.data?.total,
+            position: ["none", "bottomCenter"],
+            onChange: (page, pageSize) => {
+              dispatch({
+                type: "set pagination",
+                payload: {
+                  limit: pageSize,
+                  page,
+                },
+              });
+            },
           }}
-          // pagination={{
-          //   current: state.pagination.page,
-          //   pageSize: state.pagination.limit,
-          //   total: resTable?.data?.total,
-          //   position: ["none", "bottomCenter"],
-          //   onChange: (page, pageSize) => {
-          //     dispatch({
-          //       type: "set pagination",
-          //       payload: {
-          //         limit: pageSize,
-          //         page,
-          //       },
-          //     });
-          //   },
-          // }}
         />
       </Spin>
     </>
