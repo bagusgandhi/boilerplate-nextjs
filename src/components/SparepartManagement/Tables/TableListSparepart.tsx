@@ -177,48 +177,6 @@ export default function TableListSparepart({ handlersModal }: any) {
                 Delete
               </Button>
             </Popconfirm>
-            {/* {canUpdateUser &&(<Button
-              onClick={() => {
-                dispatch({
-                  type: "set formType",
-                  payload: "edit",
-                });
-                dispatch({
-                  type: "set userId",
-                  payload: record.id,
-                });
-                handlersModal.open();
-              }}
-              size="small"
-              icon={<EditOutlined />}
-            >
-              Edit
-            </Button>)}
-            {canDeleteUser && (<Popconfirm
-              placement="bottom"
-              title={"Warning"}
-              description={'Are you sure to delete "' + record.name + '" ?'}
-              okText="Yes"
-              cancelText="No"
-              onConfirm={async () => {
-                await deleteUser.trigger();
-                await resTable.mutate();
-              }}
-            >
-              <Button
-                onClick={() => {
-                  dispatch({
-                    type: "set userId",
-                    payload: record.id,
-                  });
-                }}
-                danger
-                size="small"
-                icon={<DeleteOutlined />}
-              >
-                Delete
-              </Button>
-            </Popconfirm>)} */}
           </div>
         );
       },
@@ -228,16 +186,15 @@ export default function TableListSparepart({ handlersModal }: any) {
   return (
     <>
       <Spin size="large" 
-        spinning={resTable?.isLoading}
+        spinning={resTable?.isLoading || resTable?.isValidating}
       >
         <Table
           dataSource={resTable?.data?.results?.map((item: any) => ({
             ...item,
             key: item.id,
-          }))}
+          })) ?? []}
           columns={columns}
           onChange={(pagination, filters, sorter, extra) => {
-            console.log(filters)
             dispatch({
               type: "set filter.asset_type",
               payload: filters.asset_type?.[0]
