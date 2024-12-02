@@ -38,6 +38,18 @@ export default function MaintenanceAdd({ session }: any) {
   const [form] = Form.useForm();
   const router = useRouter();
 
+  const flowMap = {
+    'inisialisasi': 0,
+    'pengukuran': 1,
+    'engineering': 2,
+    'penyimpanan': 3,
+    'assembly': 4
+  }
+
+  // jika maintenance null atau inisialisasi
+  // maka ketika klik lanjut upsert maintenance data
+  // namun jika tidak inisialisasi maka jangan lakukan upsert 
+
   const resFlow = useSWRFetcher<any>({
     key: [`api/flow`],
     axiosOptions: {
@@ -140,11 +152,15 @@ export default function MaintenanceAdd({ session }: any) {
       >
         <Spin size="large" spinning={resFlow?.isLoading}>
           <div className="flex flex-col gap-8 bg-white p-8 mt-6">
+            
+            {/* step info */}
             <Steps
               type="default"
               current={state.stepperStats}
               items={stepperItem ?? []}
             />
+
+            {/* form search */}
             <Form
               layout="horizontal"
               form={form}
@@ -176,8 +192,10 @@ export default function MaintenanceAdd({ session }: any) {
                     onChange={(value: any) => {
                       if (value) {
                         form.setFieldsValue({ search: value });
+                        localStorage.setItem("assetId", value);
                       } else {
                         form.setFieldsValue({ search: undefined });
+                        localStorage.setItem("assetId", "");
                         dispatch({
                           type: "set filter.assetId",
                           payload: undefined,
@@ -262,7 +280,12 @@ export default function MaintenanceAdd({ session }: any) {
                 <Col xs={24}>
                   <Flex gap={10} justify={"flex-end"} align={"center"}>
                     <Button icon={<PrinterOutlined />}>Cetak</Button>
-                    <Button icon={<ArrowRightOutlined />}>Lanjut</Button>
+                    <Button 
+                      icon={<ArrowRightOutlined />}
+                      onClick={() => {
+                        dispatch({ type: "set stepperStats", payload: state.stepperStats + 1 });
+                      }}
+                      >Lanjut</Button>
                   </Flex>
                 </Col>
               </Row>
@@ -296,6 +319,9 @@ const initialState: initialStateType = {
 
 function stateReducer(draft: any, action: any) {
   switch (action.type) {
+    case "set stepperStats":
+      draft.stepperStats = action.payload;
+      break;
     case "set filter.assetId":
       draft.filter.assetId = action.payload;
       break;
