@@ -10,31 +10,67 @@ import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 
 export default function MaintenanceList({ session }: any) {
   const [state, dispatch] = useImmerReducer(stateReducer, initialState);
-  const [openedModal, handlersModal] = useDisclosure(false)
+  const [openedModal, handlersModal] = useDisclosure(false);
   const [form] = Form.useForm();
+
+  const resMaintenance = useSWRFetcher<any>({
+    key: [`api/maintenance`],
+    axiosOptions: {
+      params: {
+        page: state.pagination.page,
+        limit: state.pagination.limit,
+        search: state.filter.search,
+      },
+    },
+  });
+
+  useEffect(() => {
+    resMaintenance.mutate();
+  }, [state.filter]);
 
   return (
     <>
       <MaintenanceListContext.Provider
         value={{
           state: [state, dispatch],
-          session
+          session,
+          resMaintenance
         }}
       >
         <div className="flex flex-col gap-4 bg-white p-6 mt-6">
-          <Form layout="horizontal" form={form}>
+          <Form 
+            layout="horizontal" 
+            form={form}
+            onFinish={(value) => {
+              dispatch({ type: "set filter.search", payload: value.search });
+            }}
+          >
             <Flex align="center" justify="space-between" gap={10}>
-              <Form.Item label="Pencarian" name="search" style={{ flex: 1, width: "100%" }}>
-                <Input
-                  type="text"
-                  placeholder="Masukan ID Gerbong, Phase"
-                />
+              <Form.Item
+                label="Pencarian"
+                name="search"
+                style={{ flex: 1, width: "100%" }}
+              >
+                <Input type="text" placeholder="Masukan ID Gerbong, Phase" />
               </Form.Item>
               <Form.Item>
-                  <Button icon={<UndoOutlined />} >Atur Ulang</Button>
+                <Button 
+                  icon={<UndoOutlined />}
+                  onClick={() => {
+                    form.setFieldValue("search", undefined);
+                    dispatch({ type: "set filter.search", payload: undefined })
+                  }}
+                >Atur Ulang</Button>
               </Form.Item>
               <Form.Item>
-                  <Button icon={<SearchOutlined />} type="primary" >Cari</Button>
+                <Button 
+                  loading={resMaintenance.isLoading}
+                  htmlType="submit"
+                  icon={<SearchOutlined />}
+                  type="primary"
+                >
+                  Cari
+                </Button>
               </Form.Item>
             </Flex>
           </Form>
@@ -45,7 +81,7 @@ export default function MaintenanceList({ session }: any) {
             <p>Search Table</p>
             <div className="flex align-items-center gap-2">
               {/* <Button>Cek Data</Button> */}
-              <Link href={"/dashboard/maintenance/add"}>              
+              <Link href={"/dashboard/maintenance/add"}>
                 <Button icon={<PlusOutlined />} type="primary">
                   Tambah Data
                 </Button>
@@ -60,15 +96,17 @@ export default function MaintenanceList({ session }: any) {
   );
 }
 
-export const MaintenanceListContext = createContext<any | undefined>(
-  undefined
-);
+export const MaintenanceListContext = createContext<any | undefined>(undefined);
 
 interface initialStateType {
   loading: boolean;
   filter: {
     search: string | undefined;
     flow: string | undefined;
+  };
+  pagination: {
+    limit: number;
+    page: number;
   };
 }
 
@@ -77,6 +115,10 @@ const initialState: initialStateType = {
   filter: {
     search: undefined,
     flow: undefined,
+  },
+  pagination: {
+    limit: 10,
+    page: 1,
   },
 };
 
@@ -91,6 +133,8 @@ function stateReducer(draft: any, action: any) {
     case "set loading":
       draft.loading = action.payload;
       break;
+    case "set pagination":
+      draft.pagination = action.payload;
+      break;
   }
 }
-
