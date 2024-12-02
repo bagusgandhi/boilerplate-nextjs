@@ -23,13 +23,14 @@ export default function SparepartList({ session }: any) {
         limit: state.pagination.limit,
         search: state.filter.search,
         asset_type: state.filter.asset_type,
+        order: 'created_at:DESC'
       },
     },
   });
 
   useEffect(() => {
     resTable.mutate();
-  }, [state.filter]);
+  }, [state.filter, state.pagination]);
 
   return (
     <>
