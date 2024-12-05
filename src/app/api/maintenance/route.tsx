@@ -17,6 +17,8 @@ export async function GET(req: NextRequest) {
     const limit = searchParams.get('limit');
     const search = searchParams.get('search');
     const viewAll = searchParams.get('viewAll');
+    const is_maintenance = searchParams.get('is_maintenance');
+
 
 
     if (!token) {
@@ -32,7 +34,7 @@ export async function GET(req: NextRequest) {
     };
 
     // Make the GET request using Axios
-    const response = await axios.get(apiUrl, { headers, params: { order, page, limit, search, viewAll } });
+    const response = await axios.get(apiUrl, { headers, params: { order, page, limit, search, viewAll, is_maintenance } });
 
     // Return the data from the response
     return NextResponse.json(response.data, { status: response.status });

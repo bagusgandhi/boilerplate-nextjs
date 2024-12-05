@@ -6,14 +6,17 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 import { useSWRMutationFetcher } from "@/utils/hooks/useSweFetcherMutation";
 import { useHasPermission } from "@/utils/hooks/usePermission";
+import { useRouter } from "next/navigation";
 
 export default function TableListMaintenance({ handlersModal }: any) {
   const {
+    session,
     state: [state, dispatch],
     resMaintenance,
-    session,
+    updateMaintenance
   }: any = useContext(MaintenanceListContext);
-
+  
+  const router = useRouter();
   // const canUpdateUser = useHasPermission({
   //   requiredPermission: ["userManagement.updateUser"],
   //   session,
@@ -66,7 +69,7 @@ export default function TableListMaintenance({ handlersModal }: any) {
         state.pagination.limit * (state.pagination.page - 1) + index + 1,
     },
     {
-      title: "Spare Part",
+      title: "Asset",
       dataIndex: ["asset", "asset_type"],
       key: "asset_type",
     },
@@ -90,7 +93,8 @@ export default function TableListMaintenance({ handlersModal }: any) {
           <div className="flex gap-2">
             <Button
               onClick={() => {
-                console.log(record?.asset?.id);
+                // console.log(record?.asset?.id);
+                router.push(`/dashboard/maintenance/${record?.id}`);
               }}
               size="small"
               icon={<EditOutlined />}
@@ -100,17 +104,31 @@ export default function TableListMaintenance({ handlersModal }: any) {
             <Popconfirm
               placement="bottom"
               title={"Warning"}
-              description={'Are you sure to delete this maintenance ?'}
+              description={'Apakah anda yakin ingin menghapus data maintenance ?'}
               okText="Yes"
               cancelText="No"
               onConfirm={async () => {
-                console.log(record?.asset?.id);
+                const data = {
+                  data: {
+                    asset_id:record?.asset?.id,
+                    flow: null,
+                    is_maintenance: false,
+                }};
+
+                await updateMaintenance.trigger(data);
+                await resMaintenance.mutate();
               }}
             >
               <Button
                 danger
                 size="small"
                 icon={<DeleteOutlined />}
+                onClick={() => {
+                  dispatch({
+                    type: "set selectedAssetId",
+                    payload: record?.asset?.id
+                  })
+                }}
               >
                 Delete
               </Button>

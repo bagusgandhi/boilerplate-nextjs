@@ -1,12 +1,13 @@
 "use client";
 import { useImmerReducer } from "use-immer";
 import React, { createContext, useEffect } from "react";
-import { Button, Flex, Form, Input } from "antd";
+import { Button, Flex, Form, Input, notification } from "antd";
 import { PlusOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import TableListMaintenance from "../../Table/TableListMaintenance";
 import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
+import { useSWRMutationFetcher } from "@/utils/hooks/useSweFetcherMutation";
 
 export default function MaintenanceList({ session }: any) {
   const [state, dispatch] = useImmerReducer(stateReducer, initialState);
@@ -20,6 +21,24 @@ export default function MaintenanceList({ session }: any) {
         page: state.pagination.page,
         limit: state.pagination.limit,
         search: state.filter.search,
+        is_maintenance: true,
+        order: 'updated_at:DESC'
+      },
+    },
+  });
+
+  const updateMaintenance = useSWRMutationFetcher({
+    key: [`update:api/maintenance`],
+    axiosOptions: {
+      method: "PATCH",
+      url: `api/maintenance`,
+    },
+    swrOptions: {
+      onSuccess: (data: any) => {
+        notification["success"]({
+          message: "Success",
+          description: "Swap Asset has been update",
+        });
       },
     },
   });
@@ -34,7 +53,8 @@ export default function MaintenanceList({ session }: any) {
         value={{
           state: [state, dispatch],
           session,
-          resMaintenance
+          resMaintenance,
+          updateMaintenance
         }}
       >
         <div className="flex flex-col gap-4 bg-white p-6 mt-6">
@@ -108,6 +128,7 @@ interface initialStateType {
     limit: number;
     page: number;
   };
+  selectedAssetId: string | undefined;
 }
 
 const initialState: initialStateType = {
@@ -120,10 +141,14 @@ const initialState: initialStateType = {
     limit: 10,
     page: 1,
   },
+  selectedAssetId: undefined
 };
 
 function stateReducer(draft: any, action: any) {
   switch (action.type) {
+    case "set selectedAssetId":
+      draft.selectedAssetId = action.payload;
+      break;
     case "set filter.search":
       draft.filter.search = action.payload;
       break;

@@ -1,5 +1,5 @@
 import React from 'react'
-import StepperContent from '@/components/Maintenance/StepperContent/Index';
+import StepperContent from '@/components/Maintenance/Pages/Details/Index';
 import { Breadcrumb } from 'antd';
 import Title from 'antd/es/typography/Title';
 
@@ -20,7 +20,7 @@ export default function page({ params }: { params: { id: string }}) {
       </div>
 
       <div className="px-8">
-        <StepperContent id={params.id} />
+        <StepperContent id={params.id} withHeader={true}/>
       </div>
     </>
   )

@@ -1,14 +1,22 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
-import { Layout, Breadcrumb, Menu, Button, ConfigProvider, Flex } from "antd";
+import { Layout, Breadcrumb, Menu, Button, ConfigProvider, Flex, Dropdown, Space } from "antd";
 import type { MenuProps } from "antd";
 import {
+  AreaChartOutlined,
   DesktopOutlined,
+  DownOutlined,
   FileOutlined,
+  HistoryOutlined,
+  PartitionOutlined,
   PieChartOutlined,
+  SnippetsOutlined,
+  TableOutlined,
   TeamOutlined,
+  ToolOutlined,
   UserOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 const { Header, Content, Footer, Sider } = Layout;
 import { usePathname } from "next/navigation";
@@ -37,26 +45,32 @@ function getItem(
 // });
 
 const items: MenuItem[] = [
-  getItem("Dashboard", "/dashboard", <PieChartOutlined />, "/dashboard"),
-  getItem(
-    "Sparepart Management",
-    "/dashboard/sparepart-management",
-    <PieChartOutlined />,
-    "/dashboard/sparepart-management"
-  ),
+  getItem("Dashboard", "/dashboard", <AreaChartOutlined />, "/dashboard"),
   getItem(
     "Maintenance",
     "/dashboard/maintenance",
-    <PieChartOutlined />,
+    <ToolOutlined />,
     "/dashboard/maintenance"
+  ),
+  getItem(
+    "Sparepart Management",
+    "/dashboard/sparepart-management",
+    <TableOutlined />,
+    "/dashboard/sparepart-management"
+  ),
+  getItem(
+    "Asset Management",
+    "/dashboard/asset-management",
+    <SnippetsOutlined />,
+    "/dashboard/asset-management"
   ),
   getItem(
     "Flow Management",
     "/dashboard/flow-management",
-    <PieChartOutlined />,
+    <PartitionOutlined />,
     "/dashboard/flow-management"
   ),
-  getItem("History Log", "/nphistory-log", <UserOutlined />, undefined, [
+  getItem("History Log", "/nphistory-log", <HistoryOutlined />, undefined, [
     getItem(
       "Maintenance",
       "/history-log/maintenance",
@@ -70,7 +84,7 @@ const items: MenuItem[] = [
       "/history-log/activity"
     ),
   ]),
-  getItem("Manage Users", "/npmmanage-users", <UserOutlined />, undefined, [
+  getItem("Manage Users", "/npmmanage-users", <UsergroupAddOutlined />, undefined, [
     getItem(
       "User",
       "/dashboard/manage-users",
@@ -99,9 +113,17 @@ export default function DashboardLayout({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
-  // const { data: session, status } = useSession()
+  const { data: session, status } = useSession()
 
-  // console.log(pathname)
+  const itemsProfile: MenuProps['items'] = [
+    {
+      label: "Log Out",
+      key: '0',
+      onClick: () => signOut()
+    },
+  ];
+
+  console.log(session)
 
   return (
     <ConfigProvider
@@ -136,6 +158,9 @@ export default function DashboardLayout({
             zIndex: 100,
             background: "#2D2A70",
             height: 50,
+            paddingLeft: 10,
+            paddingRight: 10,
+
           }}
         >
           <div className="w-full px-4 flex justify-between">
@@ -146,15 +171,14 @@ export default function DashboardLayout({
             </div>
 
             <div>
-              <Button
-                onClick={() => signOut()}
-                className="!py-2 !px-4 block !h-fit !bg-red-500"
-                danger
-              >
-                <span className="!flex items-center justify-center !text-white text-sm">
-                  Log Out
-                </span>
-              </Button>
+              <Dropdown placement="bottomLeft" menu={{ items: itemsProfile }} trigger={['click']}>
+                  <Button icon={<UserOutlined style={{ color: "#4942E4", backgroundColor: "#eee", padding: "6px", borderRadius: "50%" }} />} type="text" className="!text-white !hover:text-white cursor-pointer" onClick={(e) => e.preventDefault()}>
+                    <Space>
+                      {session?.user?.name}
+                      <DownOutlined />
+                    </Space>
+                  </Button>
+                </Dropdown>
             </div>
           </div>
         </Header>
