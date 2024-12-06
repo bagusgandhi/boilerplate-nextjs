@@ -157,7 +157,7 @@ export default function TableListSparepart({ handlersModal, isAsset }: any) {
               cancelText="No"
               onConfirm={async () => {
                 await deleteSparepart.trigger();
-                await resTable.mutate();
+                await resTableSparepart.mutate();
               }}
             >
               <Button
