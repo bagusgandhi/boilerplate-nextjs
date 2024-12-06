@@ -14,10 +14,12 @@ export default async function page() {
         <Breadcrumb
           items={[
             { title: "Dashboard", href: "/dashboard" }, 
-            { title: "Flow Management", href: "/dashboard/flow-management" }]}
+            { title: "History" },
+            { title: "Activity Log", href: "/dashboard/history/activity-log" }
+          ]}
           style={{ margin: "16px 0" }}
         />
-        <Title level={4}>Flow Management</Title>
+        <Title level={4}>Activity Log</Title>
       </div>
       {/* <ManagePermissions session={session} /> */}
     </>

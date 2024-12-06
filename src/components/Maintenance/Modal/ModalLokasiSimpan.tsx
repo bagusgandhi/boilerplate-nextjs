@@ -1,6 +1,6 @@
 import { Form, Input, InputNumber, Modal, Select, message } from "antd";
 import React, { useContext } from "react";
-import { MaintenanceAddContext } from "../Pages/Add/Index";
+import { MaintenanceAddContext } from "../Pages/Index";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 import { flowMapReverse } from "@/utils/const/flowMap";
 
@@ -16,7 +16,7 @@ export default function ModalLokasiSimpan({
     session,
     state: [state, dispatch],
     resAssetDetail,
-    updateAsset
+    updateAsset,
   }: any = useContext(MaintenanceAddContext);
 
   const handleOk = async () => {
@@ -30,7 +30,7 @@ export default function ModalLokasiSimpan({
           asset_type: "Keping Roda",
           location: values?.location?.toLowerCase(),
           flow: flowMapReverse[state.stepperStats],
-          parent_asset_id: null
+          parent_asset_id: null,
         },
       };
 
@@ -71,8 +71,8 @@ export default function ModalLokasiSimpan({
         maskClosable={false}
       >
         <Form layout="horizontal" form={form}>
-          <Form.Item 
-            label="Lokasi" 
+          <Form.Item
+            label="Lokasi"
             name="location"
             rules={[{ required: true, message: "Please input your location!" }]}
           >

@@ -10,26 +10,42 @@ import ModalSparepart from "../Modal/ModalSparepart";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 import TableListSparepart from "../Tables/TableListSparepart";
 
-export default function SparepartList({ session }: any) {
+export default function SparepartList({ session, isAsset = false }: any) {
   const [state, dispatch] = useImmerReducer(stateReducer, initialState);
   const [openedModal, handlersModal] = useDisclosure(false);
   const [form] = Form.useForm();
 
   const resTable = useSWRFetcher<any>({
-    key: [`api/asset`],
+    key: isAsset && [`isAsset:api/asset`],
     axiosOptions: {
+      url: 'api/asset',
       params: {
         page: state.pagination.page,
         limit: state.pagination.limit,
         search: state.filter.search,
-        asset_type: state.filter.asset_type,
-        order: 'created_at:DESC'
+        asset_types: state.filter.asset_types ?? ['Gerbong', 'Train Set', 'Bogie'],
+        order: "created_at:DESC",
+      },
+    },
+  });
+
+  const resTableSparepart = useSWRFetcher<any>({
+    key: [`isNotAsset:api/asset`],
+    axiosOptions: {
+      url: 'api/asset',
+      params: {
+        page: state.pagination.page,
+        limit: state.pagination.limit,
+        search: state.filter.search,
+        asset_type: 'Keping Roda',
+        order: "created_at:DESC",
       },
     },
   });
 
   useEffect(() => {
     resTable.mutate();
+    resTableSparepart.mutate();
   }, [state.filter, state.pagination]);
 
   return (
@@ -39,6 +55,7 @@ export default function SparepartList({ session }: any) {
           state: [state, dispatch],
           session,
           resTable,
+          resTableSparepart
         }}
       >
         <div className="flex flex-col gap-4 bg-white p-6 mt-6">
@@ -62,7 +79,7 @@ export default function SparepartList({ session }: any) {
                   icon={<UndoOutlined />}
                   onClick={() => {
                     form.setFieldValue("search", undefined);
-                    dispatch({ type: "set filter.search", payload: undefined })
+                    dispatch({ type: "set filter.search", payload: undefined });
                   }}
                 >
                   Atur Ulang
@@ -100,9 +117,9 @@ export default function SparepartList({ session }: any) {
             </div>
           </div>
 
-          <ModalSparepart open={openedModal} handlersModal={handlersModal} />
+          <ModalSparepart open={openedModal} handlersModal={handlersModal} isAsset={isAsset} />
 
-          <TableListSparepart handlersModal={handlersModal} />
+          <TableListSparepart handlersModal={handlersModal} isAsset={isAsset} />
         </div>
       </SparepartListContext.Provider>
     </>
@@ -122,6 +139,7 @@ interface initialStateType {
   filter: {
     search: string | undefined;
     asset_type: string | undefined;
+    asset_types: string[] | undefined;
   };
 }
 
@@ -136,6 +154,7 @@ const initialState: initialStateType = {
   filter: {
     search: undefined,
     asset_type: undefined,
+    asset_types: undefined,
   },
 };
 
@@ -155,6 +174,9 @@ function stateReducer(draft: any, action: any) {
       break;
     case "set filter.asset_type":
       draft.filter.asset_type = action.payload;
+      break;
+    case "set filter.asset_types":
+      draft.filter.asset_types = action.payload;
       break;
     case "set loading":
       draft.loading = action.payload;

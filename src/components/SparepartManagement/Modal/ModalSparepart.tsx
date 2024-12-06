@@ -17,9 +17,11 @@ import { useSWRMutationFetcher } from "@/utils/hooks/useSweFetcherMutation";
 export default function ModalSparepart({
   open,
   handlersModal,
+  isAsset = false
 }: {
   open: boolean;
   handlersModal: any;
+  isAsset?: boolean
 }) {
   const [form] = Form.useForm();
   const {
@@ -59,7 +61,10 @@ export default function ModalSparepart({
     {
       value: "Bogie",
       label: "Bogie",
-    },
+    }
+  ];
+
+  const SparePartTypeOptions = [
     {
       value: "Keping Roda",
       label: "Keping Roda",
@@ -232,7 +237,7 @@ export default function ModalSparepart({
     <>
       <Modal
         title={`${
-          state.formType === "add" ? "Tambah Sparepart" : "Edit Sparepart"
+          state.formType === "add" ? `Tambah ${isAsset ? 'Asset' : 'Sparepart'}` : `Edit ${isAsset ? 'Asset' : 'Sparepart'}`
         }`}
         open={open}
         onOk={handleOk}
@@ -283,7 +288,7 @@ export default function ModalSparepart({
               <Select
                 placeholder="Select Tipe"
                 allowClear
-                options={AssetTypeOptions}
+                options={isAsset ? AssetTypeOptions : SparePartTypeOptions}
                 onChange={(value) => {
                   form.setFieldValue("asset_type", value);
                   form.setFieldValue("bogie", undefined);

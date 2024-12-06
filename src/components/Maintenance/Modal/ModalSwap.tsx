@@ -1,11 +1,11 @@
 import { Form, Modal, Select, message } from "antd";
 import React, { useContext } from "react";
-import { MaintenanceAddContext } from "../Pages/Add/Index";
+import { MaintenanceAddContext } from "../Pages/Index";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 import { flowMapReverse } from "@/utils/const/flowMap";
 export default function ModalSwap({
   open,
-  handlersModal
+  handlersModal,
 }: {
   open: boolean;
   handlersModal: any;
@@ -15,7 +15,7 @@ export default function ModalSwap({
     session,
     state: [state, dispatch],
     resAssetDetail,
-    swapAsset
+    swapAsset,
   }: any = useContext(MaintenanceAddContext);
 
   const resOptions = useSWRFetcher<any>({
@@ -40,7 +40,7 @@ export default function ModalSwap({
       await form.validateFields();
       const values = form.getFieldsValue();
 
-      if(values.name === state.selectedAssetId){
+      if (values.name === state.selectedAssetId) {
         return message.error("Keping Roda tidak boleh sama");
       }
 
@@ -53,13 +53,12 @@ export default function ModalSwap({
         },
       };
 
-
       // console.log(resAssetDetail.data);
       // console.log("current", state.selectedAssetId);
       // console.log("current_parrent", state.selectedParentAssetId);
-      
-      await swapAsset.trigger(data)
-      await resAssetDetail.mutate()
+
+      await swapAsset.trigger(data);
+      await resAssetDetail.mutate();
 
       form.resetFields();
       handlersModal.close();

@@ -8,11 +8,11 @@ import { useSWRMutationFetcher } from "@/utils/hooks/useSweFetcherMutation";
 import { useHasPermission } from "@/utils/hooks/usePermission";
 import { SparepartListContext } from "../Pages/Index";
 
-export default function TableListSparepart({ handlersModal }: any) {
+export default function TableListSparepart({ handlersModal, isAsset }: any) {
   const {
     state: [state, dispatch],
     resTable,
-    session
+    resTableSparepart
   }: any = useContext(SparepartListContext);
 
   // const canUpdateUser = useHasPermission({
@@ -79,12 +79,9 @@ export default function TableListSparepart({ handlersModal }: any) {
     {
       value: "Bogie",
       text: "Bogie",
-    },
-    {
-      value: "Keping Roda",
-      text: "Keping Roda",
-    },
+    }
   ]
+
 
   const columns = [
     {
@@ -95,11 +92,11 @@ export default function TableListSparepart({ handlersModal }: any) {
         state.pagination.limit * (state.pagination.page - 1) + index + 1,
     },
     {
-      title: "Spare Part",
+      title: isAsset ? "Asset" : "Spare Part",
       dataIndex: "asset_type",
       key: "asset_type",
-      filters: AssetTypeOptions,
-      filterMultiple: false
+      filters: isAsset && AssetTypeOptions,
+      // filterMultiple: false
     },
     {
       title: "ID",
@@ -183,21 +180,104 @@ export default function TableListSparepart({ handlersModal }: any) {
     },
   ];
 
+  const columnsAsset = [
+    {
+      title: "No",
+      key: "no",
+      width: 50,
+      render: (text: any, record: any, index: number) =>
+        state.pagination.limit * (state.pagination.page - 1) + index + 1,
+    },
+    {
+      title: "Asset",
+      dataIndex: "asset_type",
+      key: "asset_type",
+      filters: isAsset && AssetTypeOptions,
+      // filterMultiple: false
+    },
+    {
+      title: "ID",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Action",
+      key: "action",
+      width: 400,
+
+      render: (record: any) => {
+        return (
+          <div className="flex gap-2">
+            <Button
+              onClick={() => {
+                dispatch({
+                  type: "set formType",
+                  payload: "edit",
+                });
+                dispatch({
+                  type: "set assetId",
+                  payload: record.id,
+                });
+                handlersModal.open();
+              }}
+              size="small"
+              icon={<EditOutlined />}
+            >
+              Edit
+            </Button>
+            <Popconfirm
+              placement="bottom"
+              title={"Warning"}
+              description={'Are you sure to delete "' + record.name + '" ?'}
+              okText="Yes"
+              cancelText="No"
+              onConfirm={async () => {
+                await deleteSparepart.trigger();
+                await resTable.mutate();
+              }}
+            >
+              <Button
+                onClick={() => {
+                  dispatch({
+                    type: "set assetId",
+                    payload: record.id,
+                  });
+                }}
+                danger
+                size="small"
+                icon={<DeleteOutlined />}
+              >
+                Delete
+              </Button>
+            </Popconfirm>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const dataSource = isAsset ?
+  resTable?.data?.results?.map((item: any) => ({
+    ...item,
+    key: item.id,
+  })) 
+  : resTableSparepart.data?.results?.map((item: any) => ({
+    ...item,
+    key: item.id,
+  }))
+
   return (
     <>
       <Spin size="large" 
         spinning={resTable?.isLoading || resTable?.isValidating}
       >
         <Table
-          dataSource={resTable?.data?.results?.map((item: any) => ({
-            ...item,
-            key: item.id,
-          })) ?? []}
-          columns={columns}
+          dataSource={dataSource ?? []}
+          columns={ isAsset ? columnsAsset : columns}
           onChange={(pagination, filters, sorter, extra) => {
             dispatch({
-              type: "set filter.asset_type",
-              payload: filters.asset_type?.[0]
+              type: "set filter.asset_types",
+              payload: filters.asset_type
             });
 
           }}

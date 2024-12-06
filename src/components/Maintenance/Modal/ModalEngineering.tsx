@@ -1,6 +1,6 @@
 import { Form, Input, InputNumber, Modal, message } from "antd";
 import React, { useContext } from "react";
-import { MaintenanceAddContext } from "../Pages/Add/Index";
+import { MaintenanceAddContext } from "../Pages/Index";
 import { flowMapReverse } from "@/utils/const/flowMap";
 
 export default function ModalEngineering({
@@ -15,7 +15,7 @@ export default function ModalEngineering({
     session,
     state: [state, dispatch],
     resAssetDetail,
-    updateAsset
+    updateAsset,
   }: any = useContext(MaintenanceAddContext);
 
   const handleOk = async () => {
@@ -47,61 +47,58 @@ export default function ModalEngineering({
   form.setFieldValue("fence", state?.paramsValue?.fence);
   form.setFieldValue("name", state.selectedAssetName);
 
-
   return (
     <>
-        <Modal
-          title="Masukan Hasil Engineering"
-          open={open}
-          onOk={handleOk}
-          onCancel={() => {
+      <Modal
+        title="Masukan Hasil Engineering"
+        open={open}
+        onOk={handleOk}
+        onCancel={() => {
+          dispatch({
+            type: "set selectedAssetId",
+            payload: undefined,
+          });
 
-            dispatch({
-              type: "set selectedAssetId",
-              payload: undefined,
-            });
+          dispatch({
+            type: "set paramsValue",
+            payload: undefined,
+          });
 
-            dispatch({
-              type: "set paramsValue",
-              payload: undefined,
-            });
+          dispatch({
+            type: "set selectedAssetName",
+            payload: undefined,
+          });
 
-            dispatch({
-              type: "set selectedAssetName",
-              payload: undefined,
-            });
-
-            handlersModal.close();
-            form.resetFields();
-          }}
-          maskClosable={false}
+          handlersModal.close();
+          form.resetFields();
+        }}
+        maskClosable={false}
+      >
+        <Form
+          layout="horizontal"
+          form={form}
+          labelCol={{ span: 4 }}
+          style={{ maxWidth: 600, marginTop: 20 }}
         >
-          <Form 
-            layout="horizontal" 
-            form={form}
-            labelCol={{ span: 4 }}
-            style={{ maxWidth: 600, marginTop: 20 }}
+          <Form.Item label="ID Keping Roda" name="name">
+            <Input type="text" disabled />
+          </Form.Item>
+          <Form.Item
+            label="Diameter"
+            name="diameter"
+            rules={[{ required: true, message: "Please input your diameter!" }]}
           >
-            <Form.Item label="ID Keping Roda" name="name">
-              <Input type="text" disabled/>
-            </Form.Item>
-            <Form.Item 
-              label="Diameter" 
-              name="diameter"
-              rules={[{ required: true, message: "Please input your diameter!" }]}
-            >
-              <Input type="number" min={1} max={1000} />
-            </Form.Item>
-            <Form.Item 
-              label="Fence" 
-              name="fence"
-              rules={[{ required: true, message: "Please input your fence!" }]}
-
-            >
-              <Input type="number" min={1} max={1000} />
-            </Form.Item>
-          </Form>
-        </Modal>
+            <Input type="number" min={1} max={1000} />
+          </Form.Item>
+          <Form.Item
+            label="Fence"
+            name="fence"
+            rules={[{ required: true, message: "Please input your fence!" }]}
+          >
+            <Input type="number" min={1} max={1000} />
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 }

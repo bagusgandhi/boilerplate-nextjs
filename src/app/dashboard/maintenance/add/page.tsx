@@ -3,7 +3,7 @@ import { Breadcrumb } from "antd";
 import { getServerSession } from "next-auth";
 import React from "react";
 import Title from "antd/es/typography/Title";
-import MaintenanceAdd from "@/components/Maintenance/Pages/Add/Index";
+import MaintenanceAdd from "@/components/Maintenance/Pages/Index";
 
 export default async function page() {
   const session = await getServerSession(authOptions);
@@ -23,7 +23,7 @@ export default async function page() {
       </div>
 
       <div className="px-8">
-          <MaintenanceAdd session={session} />
+        <MaintenanceAdd session={session} />
       </div>
     </>
   );

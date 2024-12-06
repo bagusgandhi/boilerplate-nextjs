@@ -18,11 +18,32 @@ import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 import { useRouter } from "next/navigation";
 import StepperContentAdd from "@/components/Maintenance/StepperContent/StepperContentAdd";
 import { useSWRMutationFetcher } from "@/utils/hooks/useSweFetcherMutation";
+import { flowMap } from "@/utils/const/flowMap";
 
-export default function MaintenanceAdd({ session }: any) {
+export default function Maintenance({ session, id }: any) {
   const [state, dispatch] = useImmerReducer(stateReducer, initialState);
   const [form] = Form.useForm();
   const router = useRouter();
+
+  const resMaintenanceDetail = useSWRFetcher<any>({
+    key: id && [`api/maintenance/${id}`],
+  });
+
+  useEffect(() => {
+    if (resMaintenanceDetail?.data) {
+
+      dispatch({
+        type: "set stepperStats",
+        payload: flowMap[resMaintenanceDetail?.data?.flow?.name],
+      });
+
+      dispatch({
+        type: "set filter.assetId",
+        payload: resMaintenanceDetail?.data?.asset?.id,
+      });
+
+    }
+  }, [resMaintenanceDetail?.data]);
 
   const resFlow = useSWRFetcher<any>({
     key: [`api/flow`],
@@ -39,7 +60,7 @@ export default function MaintenanceAdd({ session }: any) {
       params: {
         viewAll: true,
         asset_type: "Gerbong",
-        // is_maintenance: false
+        is_maintenance: false
       },
     },
   });
@@ -127,7 +148,7 @@ export default function MaintenanceAdd({ session }: any) {
             />
 
             {/* form search */}
-            {state.stepperStats === 0 && (
+            {(!id &&state.stepperStats === 0) && (
               <Form
                 layout="horizontal"
                 form={form}
@@ -189,7 +210,7 @@ export default function MaintenanceAdd({ session }: any) {
                       disabled={resAssetDetail?.isLoading}
                       type="primary"
                       onClick={() =>
-                        router.push("/dashboard/sparepart-management")
+                        router.push("/dashboard/asset-management")
                       }
                     >
                       Daftar Data Baru

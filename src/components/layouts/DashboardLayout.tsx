@@ -1,7 +1,16 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
-import { Layout, Breadcrumb, Menu, Button, ConfigProvider, Flex, Dropdown, Space } from "antd";
+import {
+  Layout,
+  Breadcrumb,
+  Menu,
+  Button,
+  ConfigProvider,
+  Flex,
+  Dropdown,
+  Space,
+} from "antd";
 import type { MenuProps } from "antd";
 import {
   AreaChartOutlined,
@@ -70,40 +79,46 @@ const items: MenuItem[] = [
     <PartitionOutlined />,
     "/dashboard/flow-management"
   ),
-  getItem("History Log", "/nphistory-log", <HistoryOutlined />, undefined, [
+  getItem("History", "/nphistory", <HistoryOutlined />, undefined, [
     getItem(
-      "Maintenance",
-      "/history-log/maintenance",
+      "Maintenance Log",
+      "/dashboard/history/maintenance-log",
       undefined,
-      "/history-log/maintenance"
+      "/dashboard/history/maintenance-log"
     ),
     getItem(
-      "Activity",
-      "/history-log/activity",
+      "Activity Log",
+      "/dashboard/history/activity-log",
       undefined,
-      "/history-log/activity"
-    ),
-  ]),
-  getItem("Manage Users", "/npmmanage-users", <UsergroupAddOutlined />, undefined, [
-    getItem(
-      "User",
-      "/dashboard/manage-users",
-      undefined,
-      "/dashboard/manage-users"
-    ),
-    getItem(
-      "Role",
-      "/dashboard/manage-users/role",
-      undefined,
-      "/dashboard/manage-users/role"
-    ),
-    getItem(
-      "Permission",
-      "/dashboard/manage-users/permission",
-      undefined,
-      "/dashboard/manage-users/permission"
+      "/dashboard/history/activity-log"
     ),
   ]),
+  getItem(
+    "Manage Users",
+    "/npmmanage-users",
+    <UsergroupAddOutlined />,
+    undefined,
+    [
+      getItem(
+        "User",
+        "/dashboard/manage-users",
+        undefined,
+        "/dashboard/manage-users"
+      ),
+      getItem(
+        "Role",
+        "/dashboard/manage-users/role",
+        undefined,
+        "/dashboard/manage-users/role"
+      ),
+      getItem(
+        "Permission",
+        "/dashboard/manage-users/permission",
+        undefined,
+        "/dashboard/manage-users/permission"
+      ),
+    ]
+  ),
 ];
 
 export default function DashboardLayout({
@@ -113,17 +128,17 @@ export default function DashboardLayout({
 }) {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
-  const { data: session, status } = useSession()
+  const { data: session, status } = useSession();
 
-  const itemsProfile: MenuProps['items'] = [
+  const itemsProfile: MenuProps["items"] = [
     {
       label: "Log Out",
-      key: '0',
-      onClick: () => signOut()
+      key: "0",
+      onClick: () => signOut(),
     },
   ];
 
-  console.log(session)
+  console.log(session);
 
   return (
     <ConfigProvider
@@ -160,7 +175,6 @@ export default function DashboardLayout({
             height: 50,
             paddingLeft: 10,
             paddingRight: 10,
-
           }}
         >
           <div className="w-full px-4 flex justify-between">
@@ -171,14 +185,32 @@ export default function DashboardLayout({
             </div>
 
             <div>
-              <Dropdown placement="bottomLeft" menu={{ items: itemsProfile }} trigger={['click']}>
-                  <Button icon={<UserOutlined style={{ color: "#4942E4", backgroundColor: "#eee", padding: "6px", borderRadius: "50%" }} />} type="text" className="!text-white !hover:text-white cursor-pointer" onClick={(e) => e.preventDefault()}>
-                    <Space>
-                      {session?.user?.name}
-                      <DownOutlined />
-                    </Space>
-                  </Button>
-                </Dropdown>
+              <Dropdown
+                placement="bottomLeft"
+                menu={{ items: itemsProfile }}
+                trigger={["click"]}
+              >
+                <Button
+                  icon={
+                    <UserOutlined
+                      style={{
+                        color: "#4942E4",
+                        backgroundColor: "#eee",
+                        padding: "6px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  }
+                  type="text"
+                  className="!text-white !hover:text-white cursor-pointer"
+                  onClick={(e) => e.preventDefault()}
+                >
+                  <Space>
+                    {session?.user?.name}
+                    <DownOutlined />
+                  </Space>
+                </Button>
+              </Dropdown>
             </div>
           </div>
         </Header>

@@ -11,7 +11,9 @@ export async function GET(req: NextRequest) {
     });
 
     const { searchParams } = new URL(req.url);
+    // const asset_type = searchParams.get('asset_type');
     const asset_type = searchParams.get('asset_type');
+    const asset_types = searchParams.getAll('asset_types[]');
     const order = searchParams.get('order');
     const page = searchParams.get('page');
     const limit = searchParams.get('limit');
@@ -32,8 +34,19 @@ export async function GET(req: NextRequest) {
       Authorization: `Bearer ${token?.account?.response?.access_token}`,
     };
 
+    const queryParams: Record<string, any> = {
+      order,
+      page,
+      limit,
+      search,
+      viewAll,
+      is_maintenance,
+      asset_type,
+      asset_types
+    };
+
     // Make the GET request using Axios
-    const response = await axios.get(apiUrl, { headers, params: { asset_type, order, page, limit, search, viewAll, is_maintenance } });
+    const response = await axios.get(apiUrl, { headers, params: queryParams });
 
     // Return the data from the response
     return NextResponse.json(response.data, { status: response.status });

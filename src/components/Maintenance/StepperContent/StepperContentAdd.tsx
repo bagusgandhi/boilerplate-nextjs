@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { MaintenanceAddContext } from "../Pages/Add/Index";
+import { MaintenanceAddContext } from "../Pages/Index";
 import {
   Button,
   Card,
@@ -45,9 +45,9 @@ export default function StepperContentAdd() {
   const router = useRouter();
   const [openedModalSwap, handlersModalSwap] = useDisclosure(false);
   const [openedModalPengukuran, handlersModalPengukuran] = useDisclosure(false);
-  const [openedModalEngineering, handlersModalEngineering] = useDisclosure(false);
+  const [openedModalEngineering, handlersModalEngineering] =
+    useDisclosure(false);
   const [openedModalLokasi, handlersModalLokasi] = useDisclosure(false);
-
 
   const columnsInisialisasi: any = [
     {
@@ -303,8 +303,8 @@ export default function StepperContentAdd() {
       render: (text: any, record: any, index: any) => {
         return (
           <div className="flex">
-            <Button 
-              type="link" 
+            <Button
+              type="link"
               onClick={() => {
                 // console.log("simpan")
                 dispatch({
@@ -335,24 +335,25 @@ export default function StepperContentAdd() {
                     flow: flowMapReverse[state.stepperStats],
                     parent_asset_id: null,
                     status: "not_feasible",
-                  }
-                }
+                  },
+                };
 
-                await updateAsset.trigger(data)
+                await updateAsset.trigger(data);
                 await resAssetDetail.mutate();
-              }}>
-                <Button 
-                  type="link" 
-                  onClick={() => {
-                    dispatch({
-                      type: "set selectedAssetId",
-                      payload: record?.id,
-                    });
-                  }}
-                >
-                  Buang
-                </Button>
-              </Popconfirm>
+              }}
+            >
+              <Button
+                type="link"
+                onClick={() => {
+                  dispatch({
+                    type: "set selectedAssetId",
+                    payload: record?.id,
+                  });
+                }}
+              >
+                Buang
+              </Button>
+            </Popconfirm>
           </div>
         );
       },
@@ -448,21 +449,21 @@ export default function StepperContentAdd() {
           {/* list Keping Roda */}
           <Col xs={14}>
             <Card
-                title="Wheel List"
-                style={{ marginBottom: "16px" }}
-                extra={<a href="/dashboard/sparepart-management">More</a>}
-              >
-                <Table
-                  columns={columnsInisialisasi}
-                  dataSource={
-                    resAssetDetail.data?.children
-                      ?.flatMap((item: any) => item.children)
-                      .filter((child: any) => child.status === 'active')
-                      .map(({ children, ...rest }: any) => rest) ?? []
-                  }
-                  pagination={false}
-                />
-              </Card>
+              title="Wheel List"
+              style={{ marginBottom: "16px" }}
+              extra={<a href="/dashboard/sparepart-management">More</a>}
+            >
+              <Table
+                columns={columnsInisialisasi}
+                dataSource={
+                  resAssetDetail.data?.children
+                    ?.flatMap((item: any) => item.children)
+                    .filter((child: any) => child.status === "active")
+                    .map(({ children, ...rest }: any) => rest) ?? []
+                }
+                pagination={false}
+              />
+            </Card>
           </Col>
         </Row>
       )}
@@ -475,7 +476,7 @@ export default function StepperContentAdd() {
             dataSource={
               resAssetDetail.data?.children
                 ?.flatMap((item: any) => item.children)
-                .filter((child: any) => child.status === 'active')
+                .filter((child: any) => child.status === "active")
                 .map(({ children, ...rest }: any) => rest) ?? []
               // resAssetDetail.data?.children
               //   ?.flatMap((item: any) => item.children)
@@ -494,7 +495,7 @@ export default function StepperContentAdd() {
             dataSource={
               resAssetDetail.data?.children
                 ?.flatMap((item: any) => item.children)
-                .filter((child: any) => child.status === 'active')
+                .filter((child: any) => child.status === "active")
                 .map(({ children, ...rest }: any) => rest) ?? []
               // resAssetDetail.data?.children
               //   ?.flatMap((item: any) => item.children)
@@ -513,7 +514,7 @@ export default function StepperContentAdd() {
             dataSource={
               resAssetDetail.data?.children
                 ?.flatMap((item: any) => item.children)
-                .filter((child: any) => child.status === 'inactive')
+                .filter((child: any) => child.status === "inactive")
                 .map(({ children, ...rest }: any) => rest) ?? []
               // resAssetDetail.data?.children
               //   ?.flatMap((item: any) => item.children)
@@ -560,13 +561,13 @@ export default function StepperContentAdd() {
               title="Wheel List"
               style={{ marginBottom: "16px" }}
               extra={<a href="/dashboard/sparepart-management">More</a>}
-            >              
+            >
               <Table
                 columns={columnsInisialisasi}
                 dataSource={
                   resAssetDetail.data?.children
                     ?.flatMap((item: any) => item.children)
-                    .filter((child: any) => child.status === 'active')
+                    .filter((child: any) => child.status === "active")
                     .map(({ children, ...rest }: any) => rest) ?? []
                 }
                 pagination={false}
