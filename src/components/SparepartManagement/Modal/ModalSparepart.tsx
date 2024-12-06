@@ -28,6 +28,7 @@ export default function ModalSparepart({
     session,
     state: [state, dispatch],
     resTable,
+    resTableSparepart
   }: any = useContext(SparepartListContext);
 
   // fetch user by id
@@ -225,6 +226,7 @@ export default function ModalSparepart({
       }
 
       await resTable.mutate();
+      await resTableSparepart.mutate();
 
       form.resetFields();
       handlersModal.close();
