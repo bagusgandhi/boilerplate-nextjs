@@ -13,13 +13,8 @@ const ReactApexChart = dynamic(() => import("react-apexcharts"), {
 export default function ChartTotalPengukuran({ series }: any) {
   const {
     state: [state, dispatch],
-    resSeriesMaintenanceSummary,
+    resCountsMaintenanceSummary,
   }: any = useContext(DashboardContext);
-
-  const mapOptions: any = {
-    diameter: "avg_diameter",
-    flens: "avg_flens",
-  };
 
   // ApexChart options
   const options: any = {
@@ -58,7 +53,7 @@ export default function ChartTotalPengukuran({ series }: any) {
 
   // Transform data for chart
   const chartSeries = useMemo(() => {
-    const data = resSeriesMaintenanceSummary?.data;
+    const data = resCountsMaintenanceSummary?.data;
     if (!isArray(data)) return [];
 
     const seriesData: { x: string; y: number }[] = [];
@@ -76,7 +71,7 @@ export default function ChartTotalPengukuran({ series }: any) {
       name: "Total Pengukuran",
       data: seriesData,
     }]
-  }, [resSeriesMaintenanceSummary?.data, state.options]);
+  }, [resCountsMaintenanceSummary?.data, state.options]);
 
   return (
     <div className="my-8">

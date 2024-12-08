@@ -96,6 +96,19 @@ export default function Index({ session }: any) {
     },
   });
 
+  const resCountsMaintenanceSummary = useSWRFetcher<any>({
+    key: [`count:api/maintenance-summary`],
+    axiosOptions: {
+      url: "api/maintenance-summary/count",
+      params: {
+        startedAt: state.filter?.dateRange?.[0],
+        endedAt: state.filter?.dateRange?.[1],
+        train_set: state.filter.trainSet,
+        gerbong: state.filter.gerbong,
+      },
+    },
+  });
+
   const columns: any = [
     {
       title: "No",
@@ -268,6 +281,7 @@ export default function Index({ session }: any) {
   useEffect(() => {
     resSeriesMaintenanceSummary.mutate();
     resTableMaintenanceSummary.mutate();
+    resCountsMaintenanceSummary.mutate();
   }, [state.filter]);
 
   const disabledDate = (current: any) => {
@@ -296,6 +310,7 @@ export default function Index({ session }: any) {
           state: [state, dispatch],
           session,
           resSeriesMaintenanceSummary,
+          resCountsMaintenanceSummary
         }}
       >
         <div className="flex flex-col gap-4 bg-white p-6 mt-6">
