@@ -235,6 +235,7 @@ export default function ModalSparepart({
     }
   };
 
+  const selectedType = Form.useWatch("asset_type", form);
   return (
     <>
       <Modal
@@ -357,6 +358,7 @@ export default function ModalSparepart({
             {selectedAssetType !== "Train Set" && (
               <Form.Item label="Parent" name="parent_asset_id">
                 <Select
+                disabled={!selectedType}
                   placeholder="Select Parent"
                   allowClear
                   options={
