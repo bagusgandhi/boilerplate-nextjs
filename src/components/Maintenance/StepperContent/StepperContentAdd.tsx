@@ -508,7 +508,7 @@ export default function StepperContentAdd() {
       {/* penyimpanan */}
       {state.stepperStats === 3 && (
         <div>
-          <Spin spinning={resAssetDetail.isLoading || resAssetDetail.isMutating}>
+          <Spin spinning={resAssetDetail.isLoading}>
             <Table
               columns={columnPenyimpanan}
               dataSource={
