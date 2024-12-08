@@ -107,7 +107,7 @@ export default function TableListSparepart({ handlersModal, isAsset }: any) {
       title: "Parameter",
       dataIndex: "paramsValue",
       key: "paramsValue",
-      render: (record: any) => {
+      render: (text: any, record: any, index: any) => {
         // return record?.[0]?.name ?? "-";
         return (
           <>
@@ -269,7 +269,7 @@ export default function TableListSparepart({ handlersModal, isAsset }: any) {
   return (
     <>
       <Spin size="large" 
-        spinning={resTable?.isLoading || resTable?.isValidating}
+        spinning={resTable?.isLoading || resTable?.isValidating || resTableSparepart?.isLoading || resTableSparepart?.isValidating}
       >
         <Table
           dataSource={dataSource ?? []}
