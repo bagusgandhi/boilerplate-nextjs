@@ -45,6 +45,11 @@ export default function ChartPengukuran({ series }: any) {
     yaxis: {
       max: state.options === "diameter" ? 1000 : 200,
       min: 0,
+      yaxis: {
+        labels: {
+          formatter: (value: any) => value.toFixed(2), // Rounds to two decimal places
+        },
+      },
     },
     xaxis: {
       labels: {
