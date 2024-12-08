@@ -3,9 +3,6 @@ import { Button, Popconfirm, Spin, Table, notification } from "antd";
 import React, { useContext, useEffect } from "react";
 import { MaintenanceListContext } from "../Pages/List/Index";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
-import { useSWRMutationFetcher } from "@/utils/hooks/useSweFetcherMutation";
-import { useHasPermission } from "@/utils/hooks/usePermission";
 import { useRouter } from "next/navigation";
 
 export default function TableListMaintenance({ handlersModal }: any) {

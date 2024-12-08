@@ -43,7 +43,7 @@ export default function ModalPengukuran({
   };
 
   form.setFieldValue("diameter", state?.paramsValue?.diameter);
-  form.setFieldValue("fence", state?.paramsValue?.fence);
+  form.setFieldValue("flens", state?.paramsValue?.flens);
 
   return (
     <>
@@ -86,9 +86,9 @@ export default function ModalPengukuran({
             <Input type="number" min={1} max={1000} />
           </Form.Item>
           <Form.Item
-            label="Fence"
-            name="fence"
-            rules={[{ required: true, message: "Please input your fence!" }]}
+            label="Flens"
+            name="flens"
+            rules={[{ required: true, message: "Please input your flens!" }]}
           >
             <Input type="number" min={1} max={1000} />
           </Form.Item>

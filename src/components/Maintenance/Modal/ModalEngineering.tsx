@@ -44,7 +44,7 @@ export default function ModalEngineering({
   };
 
   form.setFieldValue("diameter", state?.paramsValue?.diameter);
-  form.setFieldValue("fence", state?.paramsValue?.fence);
+  form.setFieldValue("flens", state?.paramsValue?.flens);
   form.setFieldValue("name", state.selectedAssetName);
 
   return (
@@ -91,9 +91,9 @@ export default function ModalEngineering({
             <Input type="number" min={1} max={1000} />
           </Form.Item>
           <Form.Item
-            label="Fence"
-            name="fence"
-            rules={[{ required: true, message: "Please input your fence!" }]}
+            label="Flens"
+            name="flens"
+            rules={[{ required: true, message: "Please input your flens!" }]}
           >
             <Input type="number" min={1} max={1000} />
           </Form.Item>
