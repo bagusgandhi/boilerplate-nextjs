@@ -12,6 +12,7 @@ import {
   Popconfirm,
   Row,
   Select,
+  Spin,
   Table,
   Typography,
   notification,
@@ -471,57 +472,54 @@ export default function StepperContentAdd() {
       {/* pengukuran */}
       {state.stepperStats === 1 && (
         <div>
-          <Table
-            columns={columnsPengukuran}
-            dataSource={
-              resAssetDetail.data?.children
-                ?.flatMap((item: any) => item.children)
-                .filter((child: any) => child.status === "active")
-                .map(({ children, ...rest }: any) => rest) ?? []
-              // resAssetDetail.data?.children
-              //   ?.flatMap((item: any) => item.children)
-              //   .map(({ children, ...rest }: any) => rest) ?? []
-            }
-            pagination={false}
-          />
+          <Spin spinning={resAssetDetail.isLoading}>
+            <Table
+              columns={columnsPengukuran}
+              dataSource={
+                resAssetDetail.data?.children
+                  ?.flatMap((item: any) => item.children)
+                  .filter((child: any) => child.status === "active")
+                  .map(({ children, ...rest }: any) => rest) ?? []
+              }
+              pagination={false}
+            />
+          </Spin>
         </div>
       )}
 
       {/* engineering */}
       {state.stepperStats === 2 && (
         <div>
-          <Table
-            columns={columnsEngineering}
-            dataSource={
-              resAssetDetail.data?.children
-                ?.flatMap((item: any) => item.children)
-                .filter((child: any) => child.status === "active")
-                .map(({ children, ...rest }: any) => rest) ?? []
-              // resAssetDetail.data?.children
-              //   ?.flatMap((item: any) => item.children)
-              //   .map(({ children, ...rest }: any) => rest) ?? []
-            }
-            pagination={false}
-          />
+          <Spin spinning={resAssetDetail.isLoading}>
+            <Table
+              columns={columnsEngineering}
+              dataSource={
+                resAssetDetail.data?.children
+                  ?.flatMap((item: any) => item.children)
+                  .filter((child: any) => child.status === "active")
+                  .map(({ children, ...rest }: any) => rest) ?? []
+              }
+              pagination={false}
+            />
+          </Spin>
         </div>
       )}
 
       {/* penyimpanan */}
       {state.stepperStats === 3 && (
         <div>
-          <Table
-            columns={columnPenyimpanan}
-            dataSource={
-              resAssetDetail.data?.children
-                ?.flatMap((item: any) => item.children)
-                .filter((child: any) => child.status === "inactive")
-                .map(({ children, ...rest }: any) => rest) ?? []
-              // resAssetDetail.data?.children
-              //   ?.flatMap((item: any) => item.children)
-              //   .map(({ children, ...rest }: any) => rest) ?? []
-            }
-            pagination={false}
-          />
+          <Spin spinning={resAssetDetail.isLoading || resAssetDetail.isMutating}>
+            <Table
+              columns={columnPenyimpanan}
+              dataSource={
+                resAssetDetail.data?.children
+                  ?.flatMap((item: any) => item.children)
+                  .filter((child: any) => child.status === "inactive")
+                  .map(({ children, ...rest }: any) => rest) ?? []
+              }
+              pagination={false}
+            />
+          </Spin>
         </div>
       )}
 
