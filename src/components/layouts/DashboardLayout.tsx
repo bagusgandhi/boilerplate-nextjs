@@ -159,6 +159,14 @@ export default function DashboardLayout({
             colorPrimary: "#ED6B23",
             algorithm: true, // Enable algorithm
           },
+          Select: {
+            colorPrimary: "#ED6B23",
+            algorithm: true, // Enable algorithm
+          },
+          DatePicker: {
+            colorPrimary: "#ED6B23",
+            algorithm: true, // Enable algorithm
+          },
         },
       }}
     >
