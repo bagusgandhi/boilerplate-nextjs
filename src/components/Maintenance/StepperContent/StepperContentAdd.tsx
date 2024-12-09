@@ -143,7 +143,7 @@ export default function StepperContentAdd() {
       render: (text: any, record: any, index: any) => {
         const updatedAt = moment(record.updated_at).startOf('day');
         const today = moment().startOf('day');
-        return <>{updatedAt < today ? "-" : text.diameter }</>;
+        return <>{updatedAt < today ? "-" : text?.diameter }</>;
       },
     },
     {
@@ -153,7 +153,7 @@ export default function StepperContentAdd() {
       render: (text: any, record: any, index: any) => {
         const updatedAt = moment(record.updated_at).startOf('day');
         const today = moment().startOf('day');
-        return <>{updatedAt < today ? "-" : text.flens }</>;
+        return <>{updatedAt < today ? "-" : text?.flens }</>;
       },
     },
     {
@@ -224,7 +224,7 @@ export default function StepperContentAdd() {
       render: (text: any, record: any, index: any) => {
         const updatedAt = moment(record.updated_at).startOf('day');
         const today = moment().startOf('day');
-        return <>{updatedAt < today ? "-" : text.diameter }</>;
+        return <>{updatedAt < today ? "-" : text?.diameter }</>;
       },
     },
     {
@@ -234,7 +234,7 @@ export default function StepperContentAdd() {
       render: (text: any, record: any, index: any) => {
         const updatedAt = moment(record.updated_at).startOf('day');
         const today = moment().startOf('day');
-        return <>{updatedAt < today ? "-" : text.flens }</>;
+        return <>{updatedAt < today ? "-" : text?.flens }</>;
       },
     },
     {
