@@ -22,6 +22,7 @@ import { useImmerReducer } from "use-immer";
 import ChartPengukuran from "../Charts/ChartPengukuran";
 import { render } from "react-dom";
 import ChartTotalPengukuran from "../Charts/ChartTotalPengukuran";
+import ChartTotalPengukuranKepingRoda from "../Charts/ChartPengukuranKepingRoda";
 // import ChartPengukuran from "../Charts/ChartPengukuran";
 // const ReactApexChart = dynamic(() => import("react-apexcharts"), {
 //   ssr: false,
@@ -92,6 +93,18 @@ export default function Index({ session }: any) {
         endedAt: state.filter?.dateRange?.[1],
         train_set: state.filter.trainSet,
         gerbong: state.filter.gerbong,
+      },
+    },
+  });
+
+  const resSeriesKepingRodaMaintenanceSummary = useSWRFetcher<any>({
+    key: [`series:api/maintenance-summary/wheel`],
+    axiosOptions: {
+      url: "api/maintenance-summary/wheel",
+      params: {
+        startedAt: state.filter?.dateRange?.[0],
+        endedAt: state.filter?.dateRange?.[1],
+        keping_roda: state.kepingRoda
       },
     },
   });
@@ -282,7 +295,14 @@ export default function Index({ session }: any) {
     resSeriesMaintenanceSummary.mutate();
     resTableMaintenanceSummary.mutate();
     resCountsMaintenanceSummary.mutate();
+
   }, [state.filter]);
+
+  useEffect(() => {
+    resSeriesKepingRodaMaintenanceSummary.mutate();
+  }, [state.kepingRoda, state.filter.dateRange])
+
+  // console.log(resCountsMaintenanceSummary.data)
 
   const disabledDate = (current: any) => {
     return current && current > moment().endOf("day");
@@ -297,7 +317,7 @@ export default function Index({ session }: any) {
   }) => (
     <>
       <div className="text-center flex flex-col gap-4">
-        {title}
+        <p className="text-xs font-normal">{title ?? " - "}</p>
         <p className="font-bold text-xl">{value}</p>
       </div>
     </>
@@ -310,7 +330,8 @@ export default function Index({ session }: any) {
           state: [state, dispatch],
           session,
           resSeriesMaintenanceSummary,
-          resCountsMaintenanceSummary
+          resCountsMaintenanceSummary,
+          resSeriesKepingRodaMaintenanceSummary
         }}
       >
         <div className="flex flex-col gap-4 bg-white p-6 mt-6">
@@ -322,9 +343,9 @@ export default function Index({ session }: any) {
                   resSeriesMaintenanceSummary.isValidating
                 }
               >
-                <Row align={"middle"}>
-                  <Col span={12}>
-                    <Flex align="center" gap={10}>
+                <Row align={"middle"} gutter={[20, 20]}>
+                  <Col span={10}>
+                    <Flex align="center" gap={8}>
                       <CounterComponent
                         title={"Jumlah Train Set"}
                         value={resTrainSet.data?.total}
@@ -345,10 +366,12 @@ export default function Index({ session }: any) {
                         value={resTrainSet.data?.total}
                       />
                       <Divider type="vertical" variant={"solid"} />
-                      <CounterComponent title={"Jumlah Pengukuran"} value={0} />
+                      <CounterComponent 
+                        title={"Jumlah Pengukuran"} 
+                        value={resCountsMaintenanceSummary?.data?.reduce((sum: number, item: any) => sum + Number(item.total_count), 0)} />
                     </Flex>
                   </Col>
-                  <Col span={12}>
+                  <Col span={14}>
                     <Flex align="center" gap={10}>
                       <Select
                         disabled={state.kepingRoda ? true : false}
@@ -439,7 +462,14 @@ export default function Index({ session }: any) {
                   </Col>
                 </Row>
 
-                <ChartTotalPengukuran />
+                <div className="flex gap-8">
+                  <div className={state.kepingRoda ? "w-1/2" : "w-full"}>
+                    <ChartTotalPengukuran />
+                  </div>
+                  {state.kepingRoda && (<div className="w-1/2">
+                    <ChartTotalPengukuranKepingRoda />
+                  </div>)}
+                </div>
 
                 <ChartPengukuran />
 
