@@ -125,7 +125,7 @@ export default function Maintenance({ session, id }: any) {
           updateAsset,
         }}
       >
-        <Spin size="large" spinning={resFlow?.isLoading}>
+        <Spin size="large" spinning={resFlow?.isLoading || resAssetDetail.isLoading}>
           <div className="flex flex-col gap-8 bg-white p-8 mt-6">
             {/* step info */}
             <Steps
