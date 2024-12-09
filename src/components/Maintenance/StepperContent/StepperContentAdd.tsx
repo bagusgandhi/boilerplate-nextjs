@@ -15,6 +15,7 @@ import {
   Spin,
   Table,
   Typography,
+  message,
   notification,
 } from "antd";
 import Title from "antd/es/typography/Title";
@@ -49,6 +50,8 @@ export default function StepperContentAdd() {
   const [openedModalEngineering, handlersModalEngineering] =
     useDisclosure(false);
   const [openedModalLokasi, handlersModalLokasi] = useDisclosure(false);
+
+  const [formWo] = Form.useForm();
 
   const columnsInisialisasi: any = [
     {
@@ -374,7 +377,7 @@ export default function StepperContentAdd() {
       .map(({ children, ...rest }: any) => rest) ?? []
 
       const today = moment().startOf("day");
-      const allDatesMatch = filteredData.every((item: any) =>
+      const allDatesMatch = filteredData.length > 0 && filteredData.every((item: any) =>
         moment(item.updated_at).isSame(today, "day")
       );
 
@@ -383,7 +386,6 @@ export default function StepperContentAdd() {
         payload: true,
       })
 
-      // console.log("allDatesMatch", allDatesMatch)
     }
   }, [resAssetDetail?.data]);
 
@@ -393,6 +395,8 @@ export default function StepperContentAdd() {
         asset_id: resAssetDetail?.data?.id,
         flow: null,
         is_maintenance: false,
+        wo_number: null,
+        program: null,
       },
     };
 
@@ -432,6 +436,43 @@ export default function StepperContentAdd() {
     },
   });
 
+
+  const handleOk = async () => {
+    try {
+      await formWo.validateFields();
+      const values = formWo.getFieldsValue();
+
+      const data: any = {
+        data: {
+          wo_number: values.wo_number,
+          program: values.program,
+          asset_id: resAssetDetail?.data?.id,
+          flow: "inisialisasi",
+        },
+      };
+
+      // console.log()
+      // resAssetDetail?.data?.maintenance.wo_number
+      // resAssetDetail?.data?.maintenance.program
+
+      await updateMaintenance.trigger(data);
+      await resAssetDetail.mutate();
+
+      dispatch({
+        type: "set stepperStats",
+        payload: state.stepperStats + 1,
+      });
+
+    } catch (error) {
+      message.error("Form submission failed. Please check your inputs.");
+    }
+  };
+
+  formWo.setFieldsValue({
+    wo_number: resAssetDetail?.data?.maintenance.wo_number,
+    program: resAssetDetail?.data?.maintenance.program
+  })
+
   return (
     <>
       {/* inisialisasi */}
@@ -439,6 +480,57 @@ export default function StepperContentAdd() {
         <Row gutter={[16, 16]}>
           {/* information step inisialisasi */}
           <Col xs={10}>
+            <Card
+              title="Nomor WO & Program Pengukuran"
+              style={{ marginBottom: "16px" }}
+            >
+              <Form form={formWo} onFinish={handleOk}>
+                <Form.Item 
+                  name="wo_number"
+                  rules={[{ required: true, message: "Please input your wo number!" }]}
+                >
+                  <Input 
+                    type="text" 
+                    placeholder="Nomor WO"
+                    disabled={(resAssetDetail?.data?.maintenance.wo_number && resAssetDetail?.data?.maintenance.program)} 
+                  />
+                </Form.Item>
+                <Form.Item 
+                  name="program"
+                  rules={[{ required: true, message: "Please input your program!" }]}
+                  >
+                  <Select
+                    disabled={(resAssetDetail?.data?.maintenance.wo_number && resAssetDetail?.data?.maintenance.program)} 
+                    placeholder="Program Pengukuran"
+                    options={[
+                      {
+                        label: "P1",
+                        value: "P1",
+                      },
+                      {
+                        label: "P3",
+                        value: "P3",
+                      },
+                      {
+                        label: "P6",
+                        value: "P6",
+                      },
+                      {
+                        label: "P12",
+                        value: "P12",
+                      }
+                    ]}
+                  />
+                </Form.Item>
+                  {!resAssetDetail?.data?.maintenance.wo_number && (<Button
+                    type="primary"
+                    htmlType="submit"
+                    style={{ width: "100%" }}
+                  >
+                    Simpan
+                  </Button>)}
+              </Form>
+            </Card>
             <Card title="Nomor Train Set" style={{ marginBottom: "16px" }}>
               <Title level={3}>
                 {resAssetDetail?.data?.parent_asset?.name}
@@ -455,13 +547,13 @@ export default function StepperContentAdd() {
               </Text>
             </Card>
 
-            <Card
+            {/* <Card
               title="Riwayat"
               style={{ marginBottom: "16px" }}
               extra={<a href="#">More</a>}
             >
               <p className="text-sm">Aktivitas Terakhir</p>
-            </Card>
+            </Card> */}
           </Col>
 
           {/* list Keping Roda */}
@@ -589,9 +681,9 @@ export default function StepperContentAdd() {
         <Col xs={24}>
           <Flex gap={10} justify={"flex-end"} align={"center"}>
             {/* print */}
-            {state.stepperStats === 0 && (
+            {/* {state.stepperStats === 0 && (
               <Button icon={<PrinterOutlined />}>Print</Button>
-            )}
+            )} */}
 
             {/* prev */}
             {state.stepperStats > 0 && (
@@ -625,21 +717,21 @@ export default function StepperContentAdd() {
             )}
 
             {/* next */}
-            {state.stepperStats < 4 && (
+            {(state.stepperStats < 4 && (resAssetDetail?.data?.maintenance.wo_number && resAssetDetail?.data?.maintenance.program)) &&  (
               <Button
                 icon={<ArrowRightOutlined />}
                 disabled={state.stepperStats === 0 ? false : !state.isSaved}
                 onClick={async () => {
-                  if (state.stepperStats === 0) {
-                    const data: any = {
-                      data: {
-                        asset_id: resAssetDetail?.data?.id,
-                        flow: "inisialisasi",
-                      },
-                    };
+                  // if (state.stepperStats === 0) {
+                  //   const data: any = {
+                  //     data: {
+                  //       asset_id: resAssetDetail?.data?.id,
+                  //       flow: "inisialisasi",
+                  //     },
+                  //   };
 
-                    await updateMaintenance.trigger(data);
-                  }
+                  //   await updateMaintenance.trigger(data);
+                  // }
 
                   dispatch({
                     type: "set stepperStats",
