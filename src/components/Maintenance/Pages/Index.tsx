@@ -1,19 +1,8 @@
 "use client";
 import { useImmerReducer } from "use-immer";
 import React, { createContext, useEffect } from "react";
-import {
-  Button,
-  Flex,
-  Form,
-  Select,
-  Spin,
-  Steps,
-  notification,
-} from "antd";
-import {
-  PlusOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
+import { Button, Flex, Form, Select, Spin, Steps, notification } from "antd";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 import { useRouter } from "next/navigation";
 import StepperContentAdd from "@/components/Maintenance/StepperContent/StepperContentAdd";
@@ -31,7 +20,6 @@ export default function Maintenance({ session, id }: any) {
 
   useEffect(() => {
     if (resMaintenanceDetail?.data) {
-
       dispatch({
         type: "set stepperStats",
         payload: flowMap[resMaintenanceDetail?.data?.flow?.name],
@@ -41,7 +29,6 @@ export default function Maintenance({ session, id }: any) {
         type: "set filter.assetId",
         payload: resMaintenanceDetail?.data?.asset?.id,
       });
-
     }
   }, [resMaintenanceDetail?.data]);
 
@@ -60,7 +47,7 @@ export default function Maintenance({ session, id }: any) {
       params: {
         viewAll: true,
         asset_type: "Gerbong",
-        is_maintenance: false
+        is_maintenance: false,
       },
     },
   });
@@ -148,7 +135,7 @@ export default function Maintenance({ session, id }: any) {
             />
 
             {/* form search */}
-            {(!id &&state.stepperStats === 0) && (
+            {!id && state.stepperStats === 0 && (
               <Form
                 layout="horizontal"
                 form={form}
@@ -209,9 +196,7 @@ export default function Maintenance({ session, id }: any) {
                       icon={<PlusOutlined />}
                       disabled={resAssetDetail?.isLoading}
                       type="primary"
-                      onClick={() =>
-                        router.push("/dashboard/asset-management")
-                      }
+                      onClick={() => router.push("/dashboard/asset-management")}
                     >
                       Daftar Data Baru
                     </Button>
@@ -238,6 +223,7 @@ interface initialStateType {
     flow: string | undefined;
   };
   isSaved?: boolean;
+  showSaveButton?: boolean;
   selectedAssetId: string | undefined;
   selectedParentAssetId: string | undefined;
   paramsValue: Record<string, any> | undefined;
@@ -255,7 +241,8 @@ const initialState: initialStateType = {
   selectedAssetId: undefined,
   selectedParentAssetId: undefined,
   paramsValue: undefined,
-  selectedAssetName: undefined
+  selectedAssetName: undefined,
+  showSaveButton: false,
 };
 
 function stateReducer(draft: any, action: any) {
@@ -283,6 +270,10 @@ function stateReducer(draft: any, action: any) {
       break;
     case "set isSaved":
       draft.isSaved = action.payload;
+      break;
+
+    case "set showSaveButton":
+      draft.showSaveButton = action.payload;
       break;
     case "set loading":
       draft.loading = action.payload;

@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import React from "react";
 import { authOptions } from "@/lib/authOptions";
 import { Breadcrumb } from "antd";
+import MaintenanceLog from "@/components/MaintenanceLog/Pages/Index";
 
 export default async function page() {
   const session = await getServerSession(authOptions);
@@ -21,7 +22,10 @@ export default async function page() {
         />
         <Title level={4}>Maintenance Log</Title>
       </div>
-      {/* <ManagePermissions session={session} /> */}
+
+      <div className="px-8">
+        <MaintenanceLog session={session} />
+      </div>
     </>
   );
 }

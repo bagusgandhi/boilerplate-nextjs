@@ -20,6 +20,8 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get('search');
     const viewAll = searchParams.get('viewAll');
     const is_maintenance = searchParams.get('is_maintenance');
+    const with_children = searchParams.get('with_children');
+
 
 
     if (!token) {
@@ -42,7 +44,8 @@ export async function GET(req: NextRequest) {
       viewAll,
       is_maintenance,
       asset_type,
-      asset_types
+      asset_types,
+      with_children
     };
 
     // Make the GET request using Axios

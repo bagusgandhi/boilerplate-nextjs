@@ -84,11 +84,11 @@ export default function StepperContentAdd() {
       },
     },
     {
-      title: "Fence",
+      title: "Flens",
       dataIndex: "paramsValue",
       key: "paramsValue",
       render: (text: any) => {
-        return text ? text.fence : "-";
+        return text ? text.flens : "-";
       },
     },
   ];
@@ -137,16 +137,20 @@ export default function StepperContentAdd() {
       title: "Diameter",
       dataIndex: "paramsValue",
       key: "paramsValue",
-      render: (text: any) => {
-        return text ? text.diameter : "-";
+      render: (text: any, record: any, index: any) => {
+        const updatedAt = moment(record.updated_at).startOf('day');
+        const today = moment().startOf('day');
+        return <>{updatedAt < today ? "-" : text.diameter }</>;
       },
     },
     {
-      title: "Fence",
+      title: "Flens",
       dataIndex: "paramsValue",
       key: "paramsValue",
-      render: (text: any) => {
-        return text ? text.fence : "-";
+      render: (text: any, record: any, index: any) => {
+        const updatedAt = moment(record.updated_at).startOf('day');
+        const today = moment().startOf('day');
+        return <>{updatedAt < today ? "-" : text.flens }</>;
       },
     },
     {
@@ -214,24 +218,20 @@ export default function StepperContentAdd() {
       title: "Diameter",
       dataIndex: "paramsValue",
       key: "paramsValue",
-      render: (text: any) => {
-        return text ? text.diameter : "-";
+      render: (text: any, record: any, index: any) => {
+        const updatedAt = moment(record.updated_at).startOf('day');
+        const today = moment().startOf('day');
+        return <>{updatedAt < today ? "-" : text.diameter }</>;
       },
     },
     {
-      title: "Fence",
+      title: "Flens",
       dataIndex: "paramsValue",
       key: "paramsValue",
-      render: (text: any) => {
-        return text ? text.fence : "-";
-      },
-    },
-    {
-      title: "Status Ukur",
-      dataIndex: "",
-      key: "status_ukur",
-      render: (text: any) => {
-        return <></>;
+      render: (text: any, record: any, index: any) => {
+        const updatedAt = moment(record.updated_at).startOf('day');
+        const today = moment().startOf('day');
+        return <>{updatedAt < today ? "-" : text.flens }</>;
       },
     },
     {
@@ -367,6 +367,23 @@ export default function StepperContentAdd() {
         type: "set stepperStats",
         payload: flowMap[resAssetDetail?.data?.maintenance?.flow?.name] ?? 0,
       });
+
+      const filteredData = resAssetDetail.data?.children
+      ?.flatMap((item: any) => item.children)
+      .filter((child: any) => child.status === "active")
+      .map(({ children, ...rest }: any) => rest) ?? []
+
+      const today = moment().startOf("day");
+      const allDatesMatch = filteredData.every((item: any) =>
+        moment(item.updated_at).isSame(today, "day")
+      );
+
+      allDatesMatch && dispatch({
+        type: "set showSaveButton",
+        payload: true,
+      })
+
+      // console.log("allDatesMatch", allDatesMatch)
     }
   }, [resAssetDetail?.data]);
 
@@ -537,19 +554,11 @@ export default function StepperContentAdd() {
             <Card
               title="Nomor Gerbong"
               style={{ marginBottom: "16px" }}
-              extra={<a href="#">More</a>}
+              extra={<a href="/dashboard/asset-management">More</a>}
             >
               <Text copyable style={{ fontSize: "24px", fontWeight: "bold" }}>
                 {resAssetDetail?.data?.name}
               </Text>
-            </Card>
-
-            <Card
-              title="Riwayat"
-              style={{ marginBottom: "16px" }}
-              extra={<a href="#">More</a>}
-            >
-              <p className="text-sm">Aktivitas Terakhir</p>
             </Card>
           </Col>
 
@@ -609,6 +618,7 @@ export default function StepperContentAdd() {
                 type="primary"
                 icon={<SaveOutlined />}
                 onClick={handleSave}
+                disabled={!state.showSaveButton}
               >
                 Save
               </Button>

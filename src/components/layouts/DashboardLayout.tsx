@@ -74,11 +74,17 @@ const items: MenuItem[] = [
     "/dashboard/asset-management"
   ),
   getItem(
-    "Flow Management",
-    "/dashboard/flow-management",
-    <PartitionOutlined />,
-    "/dashboard/flow-management"
+    "Daftar Perakitan",
+    "/dashboard/perakitan",
+    <SnippetsOutlined />,
+    "/dashboard/perakitan",
   ),
+  // getItem(
+  //   "Flow Management",
+  //   "/dashboard/flow-management",
+  //   <PartitionOutlined />,
+  //   "/dashboard/flow-management"
+  // ),
   getItem("History", "/nphistory", <HistoryOutlined />, undefined, [
     getItem(
       "Maintenance Log",
@@ -86,12 +92,12 @@ const items: MenuItem[] = [
       undefined,
       "/dashboard/history/maintenance-log"
     ),
-    getItem(
-      "Activity Log",
-      "/dashboard/history/activity-log",
-      undefined,
-      "/dashboard/history/activity-log"
-    ),
+    // getItem(
+    //   "Activity Log",
+    //   "/dashboard/history/activity-log",
+    //   undefined,
+    //   "/dashboard/history/activity-log"
+    // ),
   ]),
   getItem(
     "Manage Users",
@@ -105,18 +111,18 @@ const items: MenuItem[] = [
         undefined,
         "/dashboard/manage-users"
       ),
-      getItem(
-        "Role",
-        "/dashboard/manage-users/role",
-        undefined,
-        "/dashboard/manage-users/role"
-      ),
-      getItem(
-        "Permission",
-        "/dashboard/manage-users/permission",
-        undefined,
-        "/dashboard/manage-users/permission"
-      ),
+      // getItem(
+      //   "Role",
+      //   "/dashboard/manage-users/role",
+      //   undefined,
+      //   "/dashboard/manage-users/role"
+      // ),
+      // getItem(
+      //   "Permission",
+      //   "/dashboard/manage-users/permission",
+      //   undefined,
+      //   "/dashboard/manage-users/permission"
+      // ),
     ]
   ),
 ];
