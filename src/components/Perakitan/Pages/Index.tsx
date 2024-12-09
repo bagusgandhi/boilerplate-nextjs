@@ -34,9 +34,9 @@ export default function PerakitanList({ session }: any) {
   });
 
   const deleteSparepart = useSWRMutationFetcher({
-    key: [`delete:api/asset`],
+    key: [`patch:api/asset`],
     axiosOptions: {
-      method: "DELETE",
+      method: "PATCH",
       url: `api/asset/${state.assetId}`,
     },
     swrOptions: {

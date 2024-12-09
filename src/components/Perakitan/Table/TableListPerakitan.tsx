@@ -119,8 +119,16 @@ export default function TableListPerakitan({ handlersModal }: any) {
               okText="Yes"
               cancelText="No"
               onConfirm={async () => {
-                console.log(record)
-                await deleteSparepart.trigger();
+
+                const data: any = {
+                  data: {
+                    name: record.name,
+                    asset_type: record.asset_type,
+                    parent_asset_id: null,
+                  },
+                };
+
+                await deleteSparepart.trigger(data);
                 await resTableTrain.mutate();
               }}
             >
