@@ -23,6 +23,8 @@ import ChartPengukuran from "../Charts/ChartPengukuran";
 import { render } from "react-dom";
 import ChartTotalPengukuran from "../Charts/ChartTotalPengukuran";
 import ChartTotalPengukuranKepingRoda from "../Charts/ChartPengukuranKepingRoda";
+import { useSWRMutationFetcher } from "@/utils/hooks/useSweFetcherMutation";
+import { downloadResponseFile } from "@/utils/hooks/fetcher";
 // import ChartPengukuran from "../Charts/ChartPengukuran";
 // const ReactApexChart = dynamic(() => import("react-apexcharts"), {
 //   ssr: false,
@@ -95,6 +97,28 @@ export default function Index({ session }: any) {
         gerbong: state.filter.gerbong,
       },
     },
+  });
+
+  const { trigger: exportData, isMutating: isExporting } =
+  useSWRMutationFetcher({
+    session,
+    key: [`export:api/maintenance-summary/export`],
+    axiosOptions: {
+      url: 'api/maintenance-summary/export',
+      params: {
+        startedAt: state.filter?.dateRange?.[0],
+        endedAt: state.filter?.dateRange?.[1],
+        train_set: state.filter.trainSet,
+        gerbong: state.filter.gerbong,
+      },
+      responseType: 'blob',
+    },
+    swrOptions: {
+      onSuccess: (res: any) => {
+        downloadResponseFile({ res });
+      },
+    },
+    allRes: true,
   });
 
   const resSeriesKepingRodaMaintenanceSummary = useSWRFetcher<any>({
@@ -473,6 +497,15 @@ export default function Index({ session }: any) {
 
                 <ChartPengukuran />
 
+                <div className="flex justify-end p-4">
+                  <Button
+                    type="primary"
+                    onClick={() => exportData()}
+                    loading={isExporting}
+                  >
+                    Export to PDF
+                  </Button>
+                </div>
                 <Table
                   scroll={{ x: 1920 }}
                   columns={columns}
