@@ -112,29 +112,29 @@ export default function TableListMaintenanceLog() {
         );
       },
     },
-    {
-      title: "Details",
-      dataIndex: "details",
-      key: "details",
-      render: (text: any, record: any, index: any) => {
-        const logData = JSON.stringify(record, null, 2); // Convert the record to a readable JSON string
-        return (
-          <div
-            style={{
-              maxHeight: "150px", // Set max height for scrollable container
-              overflowY: "auto", // Enable vertical scrolling
-              overflowX: "auto", // Enable horizontal scrolling
-              backgroundColor: "#f9f9f9", // Optional: add background for better readability
-              padding: "8px", // Optional: add padding
-              border: "1px solid #ddd", // Optional: border for better visibility
-              borderRadius: "4px", // Optional: rounded corners
-            }}
-          >
-            <pre style={{ margin: 0 }}>{logData}</pre> {/* Preserve formatting */}
-          </div>
-        );
-      }
-    },
+    // {
+    //   title: "Details",
+    //   dataIndex: "details",
+    //   key: "details",
+    //   render: (text: any, record: any, index: any) => {
+    //     const logData = JSON.stringify(record, null, 2); // Convert the record to a readable JSON string
+    //     return (
+    //       <div
+    //         style={{
+    //           maxHeight: "150px", // Set max height for scrollable container
+    //           overflowY: "auto", // Enable vertical scrolling
+    //           overflowX: "auto", // Enable horizontal scrolling
+    //           backgroundColor: "#f9f9f9", // Optional: add background for better readability
+    //           padding: "8px", // Optional: add padding
+    //           border: "1px solid #ddd", // Optional: border for better visibility
+    //           borderRadius: "4px", // Optional: rounded corners
+    //         }}
+    //       >
+    //         <pre style={{ margin: 0 }}>{logData}</pre> {/* Preserve formatting */}
+    //       </div>
+    //     );
+    //   }
+    // },
   ];
 
 
