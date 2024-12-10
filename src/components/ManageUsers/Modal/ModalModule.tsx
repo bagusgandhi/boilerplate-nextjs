@@ -10,20 +10,16 @@ import {
   message,
   notification,
 } from "antd";
-import React, { useContext, useEffect } from "react";
-import { ManageUsersContext } from "../Pages/Users/Index";
-import { useHasPermission } from "@/utils/hooks/usePermission";
-import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
-import { useToggle } from "@mantine/hooks";
+import React, { useContext } from "react";
 import { ManagePermissionsContext } from "../Pages/Permissions/Index";
-import { useSWRMutationFetcher } from "@/utils/hooks/useSweFetcherMutation";
+import { handlersType } from "@/common/types/handlers";
 
 export default function ModalModule({
   open,
   handlersModal,
 }: {
   open: boolean;
-  handlersModal: any;
+  handlersModal: handlersType;
 }) {
   const [form] = Form.useForm();
   const {

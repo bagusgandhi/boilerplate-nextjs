@@ -3,12 +3,13 @@ import React, { useContext, useEffect } from "react";
 import { PerakitanListContext } from "../Pages/Index";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 import { flowMapReverse } from "@/utils/const/flowMap";
+import { handlersType } from "@/common/types/handlers";
 export default function ModalSwapPerakitan({
   open,
   handlersModal,
 }: {
   open: boolean;
-  handlersModal: any;
+  handlersModal: handlersType;
 }) {
   const [form] = Form.useForm();
   const {
@@ -19,8 +20,7 @@ export default function ModalSwapPerakitan({
   }: any = useContext(PerakitanListContext);
 
   const resOptions = useSWRFetcher<any>({
-    key: state.filter.parent_asset_type &&[`parent:api/asset`],
-    axiosOptions: {
+    key: state.filter.parent_asset_type && {
       url: "api/asset",
       params: {
         asset_types: [state.filter.parent_asset_type],
@@ -28,11 +28,19 @@ export default function ModalSwapPerakitan({
         order: "created_at:DESC",
       },
     },
+    // axiosOptions: {
+    //   url: "api/asset",
+    //   params: {
+    //     asset_types: [state.filter.parent_asset_type],
+    //     viewAll: true,
+    //     order: "created_at:DESC",
+    //   },
+    // },
   });
 
-  useEffect(() => {
-    resOptions.mutate();
-  }, [state.filter.parent_asset_type]);
+  // useEffect(() => {
+  //   resOptions.mutate();
+  // }, [state.filter.parent_asset_type]);
 
   const options = resOptions.data?.results?.map((item: any) => ({
     label: item?.name,

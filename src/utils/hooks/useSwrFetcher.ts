@@ -4,7 +4,7 @@ import { notification } from 'antd';
 import { signOut } from 'next-auth/react'; // Import signOut from next-auth
 
 interface UseSWRFetcherProps {
-  key: string | [string, AxiosRequestConfig?] | undefined;
+  key: string | [string, AxiosRequestConfig?] | AxiosRequestConfig | undefined;
   session?: { data?: { accessToken?: string } };
   swrOptions?: SWRConfiguration;
   axiosOptions?: AxiosRequestConfig;
@@ -26,7 +26,7 @@ export function useSWRFetcher<T>({
         url,
         baseURL: process.env.NEXT_PUBLIC_API_URL,
         // headers: { Authorization: `Bearer ${session?.data?.accessToken}` }, // Uncomment to include the access token
-        // ...((typeof key === 'object' && !Array.isArray(key) && key !== null) && key),
+        ...((typeof key === 'object' && !Array.isArray(key) && key !== null) && key),
         ...axiosOptions,
       };
       const response: AxiosResponse = await axios(axiosConfig);

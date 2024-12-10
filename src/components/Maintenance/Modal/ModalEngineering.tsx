@@ -2,13 +2,14 @@ import { Form, Input, InputNumber, Modal, message } from "antd";
 import React, { useContext } from "react";
 import { MaintenanceAddContext } from "../Pages/Index";
 import { flowMapReverse } from "@/utils/const/flowMap";
+import { handlersType } from "@/common/types/handlers";
 
 export default function ModalEngineering({
   open,
   handlersModal,
 }: {
   open: boolean;
-  handlersModal: any;
+  handlersModal: handlersType;
 }) {
   const [form] = Form.useForm();
   const {

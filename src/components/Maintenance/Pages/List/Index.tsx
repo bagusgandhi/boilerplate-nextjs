@@ -15,8 +15,8 @@ export default function MaintenanceList({ session }: any) {
   const [form] = Form.useForm();
 
   const resMaintenance = useSWRFetcher<any>({
-    key: [`api/maintenance`],
-    axiosOptions: {
+    key: {
+      url: 'api/maintenance',
       params: {
         page: state.pagination.page,
         limit: state.pagination.limit,
@@ -24,7 +24,17 @@ export default function MaintenanceList({ session }: any) {
         is_maintenance: true,
         order: 'updated_at:DESC'
       },
-    },
+    }
+    // key: [`api/maintenance`],
+    // axiosOptions: {
+    //   params: {
+    //     page: state.pagination.page,
+    //     limit: state.pagination.limit,
+    //     search: state.filter.search,
+    //     is_maintenance: true,
+    //     order: 'updated_at:DESC'
+    //   },
+    // },
   });
 
   const updateMaintenance = useSWRMutationFetcher({
@@ -43,9 +53,9 @@ export default function MaintenanceList({ session }: any) {
     },
   });
 
-  useEffect(() => {
-    resMaintenance.mutate();
-  }, [state.filter]);
+  // useEffect(() => {
+  //   resMaintenance.mutate();
+  // }, [state.filter]);
 
   return (
     <>

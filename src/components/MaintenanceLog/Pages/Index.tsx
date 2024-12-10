@@ -17,8 +17,7 @@ export default function MaintenanceLog({ session }: any) {
   // const [openedModal, handlersModal] = useDisclosure(false);
 
   const resTable = useSWRFetcher<any>({
-    key: [`log:api/maintenance-log`],
-    axiosOptions: {
+    key: {
       url: 'api/maintenance-log',
       params: {
         page: state.pagination.page,
@@ -26,12 +25,21 @@ export default function MaintenanceLog({ session }: any) {
         search: state.filter.search
       },
     },
+    // key: [`log:api/maintenance-log`],
+    // axiosOptions: {
+    //   url: 'api/maintenance-log',
+    //   params: {
+    //     page: state.pagination.page,
+    //     limit: state.pagination.limit,
+    //     search: state.filter.search
+    //   },
+    // },
   });
 
 
-  useEffect(() => {
-    resTable.mutate();
-  }, [state.filter, state.pagination]);
+  // useEffect(() => {
+  //   resTable.mutate();
+  // }, [state.filter, state.pagination]);
 
   return (
     <>

@@ -19,8 +19,7 @@ export default function PerakitanList({ session }: any) {
   const [form] = Form.useForm();
 
   const resTableTrain = useSWRFetcher<any>({
-    key: [`train:api/asset`],
-    axiosOptions: {
+    key: {
       url: "api/asset",
       params: {
         page: state.pagination.page,
@@ -31,6 +30,18 @@ export default function PerakitanList({ session }: any) {
         order: "created_at:DESC",
       },
     },
+    // key: [`train:api/asset`],
+    // axiosOptions: {
+    //   url: "api/asset",
+    //   params: {
+    //     page: state.pagination.page,
+    //     limit: state.pagination.limit,
+    //     search: state.filter.search,
+    //     with_children: true,
+    //     asset_types: ["Train Set"],
+    //     order: "created_at:DESC",
+    //   },
+    // },
   });
 
   const deleteSparepart = useSWRMutationFetcher({
@@ -85,9 +96,9 @@ export default function PerakitanList({ session }: any) {
   //   },
   // });
 
-  useEffect(() => {
-    resTableTrain.mutate();
-  }, [state.filter, state.pagination]);
+  // useEffect(() => {
+  //   resTableTrain.mutate();
+  // }, [state.filter, state.pagination]);
 
   return (
     <>

@@ -16,8 +16,8 @@ export default function SparepartList({ session, isAsset = false }: any) {
   const [form] = Form.useForm();
 
   const resTable = useSWRFetcher<any>({
-    key: isAsset && [`isAsset:api/asset`],
-    axiosOptions: {
+    // key: isAsset && [`isAsset:api/asset`],
+    key: isAsset && {
       url: 'api/asset',
       params: {
         page: state.pagination.page,
@@ -30,8 +30,7 @@ export default function SparepartList({ session, isAsset = false }: any) {
   });
 
   const resTableSparepart = useSWRFetcher<any>({
-    key: [`isNotAsset:api/asset`],
-    axiosOptions: {
+    key: {
       url: 'api/asset',
       params: {
         page: state.pagination.page,
@@ -41,12 +40,13 @@ export default function SparepartList({ session, isAsset = false }: any) {
         order: "created_at:DESC",
       },
     },
+    
   });
 
-  useEffect(() => {
-    resTable.mutate();
-    resTableSparepart.mutate();
-  }, [state.filter, state.pagination]);
+  // useEffect(() => {
+  //   resTable.mutate();
+  //   resTableSparepart.mutate();
+  // }, [state.filter, state.pagination]);
 
   return (
     <>

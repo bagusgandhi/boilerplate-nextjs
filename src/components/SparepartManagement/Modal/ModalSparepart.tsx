@@ -13,22 +13,23 @@ import React, { useContext } from "react";
 import { SparepartListContext } from "../Pages/Index";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 import { useSWRMutationFetcher } from "@/utils/hooks/useSweFetcherMutation";
+import { handlersType } from "@/common/types/handlers";
 
 export default function ModalSparepart({
   open,
   handlersModal,
-  isAsset = false
+  isAsset = false,
 }: {
   open: boolean;
-  handlersModal: any;
-  isAsset?: boolean
+  handlersModal: handlersType
+  isAsset?: boolean;
 }) {
   const [form] = Form.useForm();
   const {
     session,
     state: [state, dispatch],
     resTable,
-    resTableSparepart
+    resTableSparepart,
   }: any = useContext(SparepartListContext);
 
   // fetch user by id
@@ -41,13 +42,24 @@ export default function ModalSparepart({
   });
 
   if (state.formType === "edit") {
-    form.setFieldValue("name", detailAsset?.name);
-    form.setFieldValue("rfid", detailAsset?.rfid);
-    form.setFieldValue("asset_type", detailAsset?.asset_type);
-    form.setFieldValue("parent_asset_id", detailAsset?.parent_asset?.id);
-    form.setFieldValue("bogie", detailAsset?.bogie);
-    form.setFieldValue("factory", detailAsset?.factory);
-    form.setFieldValue("carriage_type", detailAsset?.carriage_type);
+    // form.setFieldValue("name", detailAsset?.name);
+    // form.setFieldValue("rfid", detailAsset?.rfid);
+    // form.setFieldValue("asset_type", detailAsset?.asset_type);
+    // form.setFieldValue("parent_asset_id", detailAsset?.parent_asset?.id);
+    // form.setFieldValue("bogie", detailAsset?.bogie);
+    // form.setFieldValue("factory", detailAsset?.factory);
+    // form.setFieldValue("carriage_type", detailAsset?.carriage_type);
+    // form.setFieldValue("status", detailAsset?.status);
+    form.setFieldsValue({
+      name: detailAsset?.name,
+      rfid: detailAsset?.rfid,
+      asset_type: detailAsset?.asset_type,
+      parent_asset_id: detailAsset?.parent_asset?.id,
+      bogie: detailAsset?.bogie,
+      factory: detailAsset?.factory,
+      carriage_type: detailAsset?.carriage_type,
+      status: detailAsset?.status,
+    });
   }
 
   const AssetTypeOptions = [
@@ -62,13 +74,28 @@ export default function ModalSparepart({
     {
       value: "Bogie",
       label: "Bogie",
-    }
+    },
   ];
 
   const SparePartTypeOptions = [
     {
       value: "Keping Roda",
       label: "Keping Roda",
+    },
+  ];
+
+  const StatusTypeOptions = [
+    {
+      value: "active",
+      label: "active",
+    },
+    {
+      value: "inactive",
+      label: "inactive",
+    },
+    {
+      value: "not_feasible",
+      label: "not_feasible",
     },
   ];
 
@@ -237,147 +264,162 @@ export default function ModalSparepart({
 
   const selectedType = Form.useWatch("asset_type", form);
   return (
-    <>
-      <Modal
-        title={`${
-          state.formType === "add" ? `Tambah ${isAsset ? 'Asset' : 'Sparepart'}` : `Edit ${isAsset ? 'Asset' : 'Sparepart'}`
-        }`}
-        open={open}
-        onOk={handleOk}
-        maskClosable={false}
-        onCancel={() => {
-          handlersModal.close();
-          dispatch({ type: "set formType", payload: undefined });
-          form.resetFields();
-        }}
-      >
-        <Spin
-          size="large"
-          spinning={isLoadingAsset}
-        >
-          <Divider />
-          <Form layout="vertical" form={form}>
-            <Form.Item
-              label="ID Sparepart"
-              name="name"
-              rules={[
-                { required: true, message: "Name is required" },
-                {
-                  whitespace: true,
-                  message: "Hindari Menggunakan Spasi di awal",
-                },
-              ]}
-            >
-              <Input type="text" placeholder="KP100201" />
-            </Form.Item>
-            <Form.Item
-              label="Rfid"
-              name="rfid"
-              rules={[
-                {
-                  whitespace: true,
-                  message: "Hindari Menggunakan Spasi di awal",
-                },
-              ]}
-            >
-              <Input type="text" placeholder="rfid.." />
-            </Form.Item>
+    <Modal
+      title={`${
+        state.formType === "add"
+          ? `Tambah ${isAsset ? "Asset" : "Sparepart"}`
+          : `Edit ${isAsset ? "Asset" : "Sparepart"}`
+      }`}
+      open={open}
+      onOk={handleOk}
+      maskClosable={false}
+      onCancel={() => {
+        dispatch({ type: "set formType", payload: undefined });
+        handlersModal.close();
+        form.resetFields();
+      }}
+    >
+      <Spin size="large" spinning={isLoadingAsset}>
+        <Divider />
+        <Form layout="vertical" form={form}>
+          <Form.Item
+            label="ID Sparepart"
+            name="name"
+            rules={[
+              { required: true, message: "Name is required" },
+              {
+                whitespace: true,
+                message: "Hindari Menggunakan Spasi di awal",
+              },
+            ]}
+          >
+            <Input type="text" placeholder="KP100201" />
+          </Form.Item>
+          <Form.Item
+            label="Rfid"
+            name="rfid"
+            rules={[
+              {
+                whitespace: true,
+                message: "Hindari Menggunakan Spasi di awal",
+              },
+            ]}
+          >
+            <Input type="text" placeholder="rfid.." />
+          </Form.Item>
 
+          <Form.Item
+            label="Tipe"
+            name="asset_type"
+            rules={[{ required: true, message: "Tipe is required" }]}
+          >
+            <Select
+              placeholder="Select Tipe"
+              allowClear
+              options={isAsset ? AssetTypeOptions : SparePartTypeOptions}
+              onChange={(value) => {
+                form.setFieldValue("asset_type", value);
+                form.setFieldValue("bogie", undefined);
+                form.setFieldValue("carriage_type", undefined);
+                form.setFieldValue("parent_asset_id", undefined);
+              }}
+            />
+          </Form.Item>
+
+          {selectedAssetType === "Bogie" && (
             <Form.Item
-              label="Tipe"
-              name="asset_type"
-              rules={[{ required: true, message: "Tipe is required" }]}
+              label="Tipe Bogie"
+              name="bogie"
+              rules={[{ required: true, message: "Bogie is required" }]}
             >
               <Select
-                placeholder="Select Tipe"
+                placeholder="Select Bogie"
                 allowClear
-                options={isAsset ? AssetTypeOptions : SparePartTypeOptions}
+                options={BogieTypeOptions}
                 onChange={(value) => {
-                  form.setFieldValue("asset_type", value);
-                  form.setFieldValue("bogie", undefined);
-                  form.setFieldValue("carriage_type", undefined);
+                  form.setFieldValue("bogie", value);
                   form.setFieldValue("parent_asset_id", undefined);
                 }}
               />
             </Form.Item>
+          )}
 
-            {selectedAssetType === "Bogie" && (
-              <Form.Item
-                label="Tipe Bogie"
-                name="bogie"
-                rules={[{ required: true, message: "Bogie is required" }]}
-              >
-                <Select
-                  placeholder="Select Bogie"
-                  allowClear
-                  options={BogieTypeOptions}
-                  onChange={(value) => {
-                    form.setFieldValue("bogie", value);
-                    form.setFieldValue("parent_asset_id", undefined);
-                  }}
-                />
-              </Form.Item>
-            )}
-
-            {selectedAssetType === "Gerbong" && (
-              <Form.Item
-                label="Tipe Gerbong"
-                name="carriage_type"
-                rules={[{ required: true, message: "Bogie is required" }]}
-              >
-                <Select
-                  placeholder="Select Tipe Gerbong"
-                  allowClear
-                  options={GerbongTypeOptions}
-                  onChange={(value) => {
-                    form.setFieldValue("carriage_type", value);
-                    form.setFieldValue("factory", undefined);
-                  }}
-                />
-              </Form.Item>
-            )}
-
-            {selectedAssetType === "Gerbong" && (
-              <Form.Item
-                label="Pabrikan"
-                name="factory"
-                rules={[{ required: true, message: "Bogie is required" }]}
-              >
-                <Select
-                  placeholder="Select Pabrikan"
-                  allowClear
-                  disabled={selectedGerbongType ? false : true}
-                  options={FactoryOptions[selectedGerbongType] ?? []}
-                  onChange={(value) => {
-                    form.setFieldValue("factory", value);
-                  }}
-                />
-              </Form.Item>
-            )}
-
-            {selectedAssetType !== "Train Set" && (
-              <Form.Item label="Parent" name="parent_asset_id">
-                <Select
-                disabled={!selectedType}
-                  placeholder="Select Parent"
-                  allowClear
-                  options={
-                    resAssetParent?.data?.results?.map((item: any) => ({
-                      label: item.name,
-                      value: item.id,
-                    })) ?? []
-                  }
-                  onChange={(value) => {
-                    form.setFieldValue("parent_asset_id", value);
-                  }}
-                />
-              </Form.Item>
-            )}
-
-            <div
-            // className={`flex flex-col gap-4 ${!isEditedPassword && "mb-4"}`}
+          {selectedAssetType === "Gerbong" && (
+            <Form.Item
+              label="Tipe Gerbong"
+              name="carriage_type"
+              rules={[{ required: true, message: "Bogie is required" }]}
             >
-              {/* {state.formType === "edit" && (
+              <Select
+                placeholder="Select Tipe Gerbong"
+                allowClear
+                options={GerbongTypeOptions}
+                onChange={(value) => {
+                  form.setFieldValue("carriage_type", value);
+                  form.setFieldValue("factory", undefined);
+                }}
+              />
+            </Form.Item>
+          )}
+
+          {selectedAssetType === "Gerbong" && (
+            <Form.Item
+              label="Pabrikan"
+              name="factory"
+              rules={[{ required: true, message: "Bogie is required" }]}
+            >
+              <Select
+                placeholder="Select Pabrikan"
+                allowClear
+                disabled={selectedGerbongType ? false : true}
+                options={FactoryOptions[selectedGerbongType] ?? []}
+                onChange={(value) => {
+                  form.setFieldValue("factory", value);
+                }}
+              />
+            </Form.Item>
+          )}
+
+          {selectedAssetType !== "Train Set" && (
+            <Form.Item label="Parent" name="parent_asset_id">
+              <Select
+                disabled={!selectedType}
+                placeholder="Select Parent"
+                allowClear
+                options={
+                  resAssetParent?.data?.results?.map((item: any) => ({
+                    label: item.name,
+                    value: item.id,
+                  })) ?? []
+                }
+                onChange={(value) => {
+                  form.setFieldValue("parent_asset_id", value);
+                }}
+              />
+            </Form.Item>
+          )}
+
+          <Form.Item
+            label="Status"
+            name="status"
+            rules={[{ required: true, message: "Bogie is required" }]}
+          >
+            <Select
+              placeholder="Pilih Status"
+              allowClear
+              options={StatusTypeOptions}
+              defaultValue={"active"}
+              // onChange={(value) => {
+              //   form.setFieldValue("bogie", value);
+              //   form.setFieldValue("parent_asset_id", undefined);
+              // }}
+            />
+          </Form.Item>
+
+          <div
+          // className={`flex flex-col gap-4 ${!isEditedPassword && "mb-4"}`}
+          >
+            {/* {state.formType === "edit" && (
                 <div className="flex gap-2 items-center">
                   <p className="text-xs">
                     Do you want to edit<br></br>this user password?
@@ -390,7 +432,7 @@ export default function ModalSparepart({
                   </Button>
                 </div>
               )} */}
-              {/* {(state.formType === "add" || isEditedPassword) && (
+            {/* {(state.formType === "add" || isEditedPassword) && (
                 <>
                   <Form.Item
                     label="Password"
@@ -417,9 +459,9 @@ export default function ModalSparepart({
                   </Form.Item>
                 </>
               )} */}
-            </div>
+          </div>
 
-            {/* {canViewRoles && (
+          {/* {canViewRoles && (
               <Form.Item label="Role" name="roleId">
                 <Select
                   loading={isLoadingRoles || isLoadingUser}
@@ -435,9 +477,8 @@ export default function ModalSparepart({
                 />
               </Form.Item>
             )} */}
-          </Form>
-        </Spin>
-      </Modal>
-    </>
+        </Form>
+      </Spin>
+    </Modal>
   );
 }

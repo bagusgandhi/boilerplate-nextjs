@@ -125,6 +125,14 @@ export default function TableListSparepart({ handlersModal, isAsset }: any) {
       },
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text: any) => {
+        return text ?? "-"
+      }
+    },
+    {
       title: "Action",
       key: "action",
       width: 400,
@@ -253,7 +261,7 @@ export default function TableListSparepart({ handlersModal, isAsset }: any) {
           </div>
         );
       },
-    },
+    }
   ];
 
   const dataSource = isAsset ?

@@ -1,18 +1,18 @@
 "use client";
 import { Divider, Form, Input, Modal, Spin, Tree, message, notification } from "antd";
 import React, { useContext, useEffect } from "react";
-import { useHasPermission } from "@/utils/hooks/usePermission";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 import { ManageRolesContext } from "../Pages/Roles/Index";
-import type { TreeDataNode, TreeProps } from "antd";
+import type { TreeProps } from "antd";
 import { useSWRMutationFetcher } from "@/utils/hooks/useSweFetcherMutation";
+import { handlersType } from "@/common/types/handlers";
 
 export default function ModalRole({
   open,
   handlersModal,
 }: {
   open: boolean;
-  handlersModal: any;
+  handlersModal: handlersType;
 }) {
   const [form] = Form.useForm();
   const {

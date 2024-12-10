@@ -3,12 +3,13 @@ import React, { useContext } from "react";
 import { MaintenanceAddContext } from "../Pages/Index";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 import { flowMapReverse } from "@/utils/const/flowMap";
+import { handlersType } from "@/common/types/handlers";
 export default function ModalSwap({
   open,
   handlersModal,
 }: {
   open: boolean;
-  handlersModal: any;
+  handlersModal: handlersType;
 }) {
   const [form] = Form.useForm();
   const {

@@ -94,6 +94,14 @@ export default function StepperContentAdd() {
         return text ? text.flens : "-";
       },
     },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text: any) => {
+        return text ?? "-";
+      },
+    },
   ];
 
   const columnsPengukuran: any = [
@@ -191,13 +199,21 @@ export default function StepperContentAdd() {
       },
     },
     {
-      title: "Status Ukur",
-      dataIndex: "",
-      key: "status_ukur",
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
       render: (text: any) => {
-        return <></>;
+        return text ?? "-";
       },
     },
+    // {
+    //   title: "Status Ukur",
+    //   dataIndex: "",
+    //   key: "status_ukur",
+    //   render: (text: any) => {
+    //     return <></>;
+    //   },
+    // },
   ];
 
   const columnsEngineering: any = [
@@ -235,6 +251,14 @@ export default function StepperContentAdd() {
         const updatedAt = moment(record.updated_at).startOf('day');
         const today = moment().startOf('day');
         return <>{updatedAt < today ? "-" : text?.flens }</>;
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text: any) => {
+        return text ?? "-";
       },
     },
     {
@@ -360,6 +384,14 @@ export default function StepperContentAdd() {
             </Popconfirm>
           </div>
         );
+      },
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text: any) => {
+        return text ?? "-";
       },
     },
   ];
@@ -566,10 +598,14 @@ export default function StepperContentAdd() {
               <Table
                 columns={columnsInisialisasi}
                 dataSource={
+                  // resAssetDetail.data?.children
+                  //   ?.flatMap((item: any) => item.children)
+                  //   .filter((child: any) => child.status === "active")
+                  //   .map(({ children, ...rest }: any) => rest) ?? []
                   resAssetDetail.data?.children
                     ?.flatMap((item: any) => item.children)
-                    .filter((child: any) => child.status === "active")
                     .map(({ children, ...rest }: any) => rest) ?? []
+                    // .filter((child: any) => child.status === "active")
                 }
                 pagination={false}
               />
@@ -587,7 +623,7 @@ export default function StepperContentAdd() {
               dataSource={
                 resAssetDetail.data?.children
                   ?.flatMap((item: any) => item.children)
-                  .filter((child: any) => child.status === "active")
+                  // .filter((child: any) => child.status === "active")
                   .map(({ children, ...rest }: any) => rest) ?? []
               }
               pagination={false}
@@ -605,7 +641,7 @@ export default function StepperContentAdd() {
               dataSource={
                 resAssetDetail.data?.children
                   ?.flatMap((item: any) => item.children)
-                  .filter((child: any) => child.status === "active")
+                  // .filter((child: any) => child.status === "active")
                   .map(({ children, ...rest }: any) => rest) ?? []
               }
               pagination={false}
@@ -666,7 +702,7 @@ export default function StepperContentAdd() {
                 dataSource={
                   resAssetDetail.data?.children
                     ?.flatMap((item: any) => item.children)
-                    .filter((child: any) => child.status === "active")
+                    // .filter((child: any) => child.status === "active")
                     .map(({ children, ...rest }: any) => rest) ?? []
                 }
                 pagination={false}

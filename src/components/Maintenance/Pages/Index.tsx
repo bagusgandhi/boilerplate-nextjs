@@ -42,14 +42,22 @@ export default function Maintenance({ session, id }: any) {
   });
 
   const resAsset = useSWRFetcher<any>({
-    key: [`api/asset`],
-    axiosOptions: {
+    key: {
+      url: "api/asset",
       params: {
         viewAll: true,
         asset_type: "Gerbong",
         is_maintenance: false,
       },
     },
+    // key: [`api/asset`],
+    // axiosOptions: {
+    //   params: {
+    //     viewAll: true,
+    //     asset_type: "Gerbong",
+    //     is_maintenance: false,
+    //   },
+    // },
   });
 
   const swapAsset = useSWRMutationFetcher({
@@ -125,7 +133,10 @@ export default function Maintenance({ session, id }: any) {
           updateAsset,
         }}
       >
-        <Spin size="large" spinning={resFlow?.isLoading || resAssetDetail.isLoading}>
+        <Spin
+          size="large"
+          spinning={resFlow?.isLoading || resAssetDetail.isLoading}
+        >
           <div className="flex flex-col gap-8 bg-white p-8 mt-6">
             {/* step info */}
             <Steps

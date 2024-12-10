@@ -16,13 +16,14 @@ import { useHasPermission } from "@/utils/hooks/usePermission";
 import { useSWRFetcher } from "@/utils/hooks/useSwrFetcher";
 import { useToggle } from "@mantine/hooks";
 import { useSWRMutationFetcher } from "@/utils/hooks/useSweFetcherMutation";
+import { handlersType } from "@/common/types/handlers";
 
 export default function ModalUser({
   open,
   handlersModal,
 }: {
   open: boolean;
-  handlersModal: any;
+  handlersModal: handlersType;
 }) {
   const [form] = Form.useForm();
   const {

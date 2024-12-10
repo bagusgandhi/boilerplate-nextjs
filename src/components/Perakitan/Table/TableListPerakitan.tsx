@@ -70,6 +70,14 @@ export default function TableListPerakitan({ handlersModal }: any) {
       key: "asset_type",
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text: any) => {
+        return text ?? "-"
+      }
+    },
+    {
       title: "Action",
       key: "action",
       width: 400,
