@@ -5,8 +5,8 @@ import SessionProvider from "../components/SessionProvider";
 import { getServerSession } from "next-auth";
 
 export const metadata: Metadata = {
-  title: "Boilerplate Dashboard",
-  description: "By Bagus Gandhi",
+  title: "KAI Inventory",
+  description: "",
 };
 
 export default async function RootLayout({
