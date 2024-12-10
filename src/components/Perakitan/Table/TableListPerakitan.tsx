@@ -53,9 +53,9 @@ export default function TableListPerakitan({ handlersModal }: any) {
   //   },
   // });
 
-  useEffect(() => {
-    console.log(state.filter)
-  }, [state.filter]);
+  // useEffect(() => {
+  //   console.log(state.filter)
+  // }, [state.filter]);
 
 
   const columnsTrain = [
@@ -108,11 +108,11 @@ export default function TableListPerakitan({ handlersModal }: any) {
                 });
 
                 handlersModal.open();
-                console.log({
-                  id: record.id,
-                  name: record.name,
-                  asset_type: record.asset_type,
-                })
+                // console.log({
+                //   id: record.id,
+                //   name: record.name,
+                //   asset_type: record.asset_type,
+                // })
 
               }}
               size="small"

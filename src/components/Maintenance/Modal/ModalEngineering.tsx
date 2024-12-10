@@ -39,7 +39,7 @@ export default function ModalEngineering({
       form.resetFields();
       handlersModal.close();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       message.error("Form submission failed. Please check your inputs.");
     }
   };

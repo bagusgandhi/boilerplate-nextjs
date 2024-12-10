@@ -113,9 +113,9 @@ export default function Maintenance({ session, id }: any) {
 
   // console.log("flatMap", resAssetDetail.data?.children?.flatMap((item: any) => item.children));
 
-  useEffect(() => {
-    resAsset.mutate();
-  }, [state.filter]);
+  // useEffect(() => {
+  //   resAsset.mutate();
+  // }, [state.filter]);
 
   const stepperItem = resFlow?.data?.results?.map((item: any) => ({
     title: item.name,

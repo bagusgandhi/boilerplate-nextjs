@@ -13,6 +13,7 @@ import {
 } from "antd";
 import type { MenuProps } from "antd";
 import {
+  ApiOutlined,
   AreaChartOutlined,
   DesktopOutlined,
   DownOutlined,
@@ -76,7 +77,7 @@ const items: MenuItem[] = [
   getItem(
     "Daftar Perakitan",
     "/dashboard/perakitan",
-    <SnippetsOutlined />,
+    <ApiOutlined />,
     "/dashboard/perakitan",
   ),
   // getItem(
@@ -144,7 +145,7 @@ export default function DashboardLayout({
     },
   ];
 
-  console.log(session);
+  // console.log(session);
 
   return (
     <ConfigProvider

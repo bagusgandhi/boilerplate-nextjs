@@ -34,12 +34,11 @@ export default function Index({ session }: any) {
   const [state, dispatch] = useImmerReducer(stateReducer, initialState);
   const searchParams = useSearchParams();
 
-  const kepingRodaId = searchParams.get("id");
-  console.log(kepingRodaId);
+  // const kepingRodaId = searchParams.get("id");
+  // console.log(kepingRodaId);
 
   const resTrainSet = useSWRFetcher<any>({
-    key: [`options-trainset:api/asset`],
-    axiosOptions: {
+    key: {
       url: "api/asset",
       params: {
         viewAll: true,
@@ -50,8 +49,7 @@ export default function Index({ session }: any) {
   });
 
   const resGerbong = useSWRFetcher<any>({
-    key: [`options-gerbong:api/asset`],
-    axiosOptions: {
+    key: {
       url: "api/asset",
       params: {
         viewAll: true,
@@ -62,8 +60,7 @@ export default function Index({ session }: any) {
   });
 
   const resKepingRoda = useSWRFetcher<any>({
-    key: [`options-keping-roda:api/asset`],
-    axiosOptions: {
+    key: {
       url: "api/asset",
       params: {
         viewAll: true,
@@ -74,8 +71,7 @@ export default function Index({ session }: any) {
   });
 
   const resTableMaintenanceSummary = useSWRFetcher<any>({
-    key: [`table:api/maintenance-summary`],
-    axiosOptions: {
+    key: {
       url: "api/maintenance-summary",
       params: {
         startedAt: state.filter?.dateRange?.[0],
@@ -87,8 +83,7 @@ export default function Index({ session }: any) {
   });
 
   const resSeriesMaintenanceSummary = useSWRFetcher<any>({
-    key: [`series:api/maintenance-summary`],
-    axiosOptions: {
+    key: {
       url: "api/maintenance-summary/series",
       params: {
         startedAt: state.filter?.dateRange?.[0],
@@ -122,8 +117,7 @@ export default function Index({ session }: any) {
   });
 
   const resSeriesKepingRodaMaintenanceSummary = useSWRFetcher<any>({
-    key: [`series:api/maintenance-summary/wheel`],
-    axiosOptions: {
+    key: {
       url: "api/maintenance-summary/wheel",
       params: {
         startedAt: state.filter?.dateRange?.[0],
@@ -134,8 +128,7 @@ export default function Index({ session }: any) {
   });
 
   const resCountsMaintenanceSummary = useSWRFetcher<any>({
-    key: [`count:api/maintenance-summary`],
-    axiosOptions: {
+    key: {
       url: "api/maintenance-summary/count",
       params: {
         startedAt: state.filter?.dateRange?.[0],
@@ -190,7 +183,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 0, "avg_diameter"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -198,7 +191,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 1, "avg_diameter"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -206,7 +199,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 2, "avg_diameter"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -214,7 +207,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 3, "avg_diameter"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -222,7 +215,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 4, "avg_diameter"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -230,7 +223,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 5, "avg_diameter"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -238,7 +231,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 6, "avg_diameter"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -246,7 +239,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 7, "avg_diameter"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -254,7 +247,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 0, "avg_flens"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -262,7 +255,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 1, "avg_flens"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -270,7 +263,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 2, "avg_flens"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -278,7 +271,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 3, "avg_flens"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -286,7 +279,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 4, "avg_flens"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -294,7 +287,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 5, "avg_flens"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -302,7 +295,7 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 6, "avg_flens"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
     {
@@ -310,21 +303,21 @@ export default function Index({ session }: any) {
       dataIndex: ["details", 7, "avg_flens"],
       key: "name",
       render: (text: any) => {
-        return text ?? "-";
+        return text ? text.toFixed(0) : "-";
       },
     },
   ];
 
-  useEffect(() => {
-    resSeriesMaintenanceSummary.mutate();
-    resTableMaintenanceSummary.mutate();
-    resCountsMaintenanceSummary.mutate();
+  // useEffect(() => {
+  //   resSeriesMaintenanceSummary.mutate();
+  //   resTableMaintenanceSummary.mutate();
+  //   resCountsMaintenanceSummary.mutate();
 
-  }, [state.filter]);
+  // }, [state.filter]);
 
-  useEffect(() => {
-    resSeriesKepingRodaMaintenanceSummary.mutate();
-  }, [state.kepingRoda, state.filter.dateRange])
+  // useEffect(() => {
+  //   resSeriesKepingRodaMaintenanceSummary.mutate();
+  // }, [state.kepingRoda, state.filter.dateRange])
 
   // console.log(resCountsMaintenanceSummary.data)
 
@@ -464,7 +457,7 @@ export default function Index({ session }: any) {
                         picker="month"
                         disabledDate={disabledDate}
                         onChange={(date, dateString) => {
-                          console.log(date, dateString);
+                          // console.log(date, dateString);
 
                           if (date?.length) {
                             dispatch({

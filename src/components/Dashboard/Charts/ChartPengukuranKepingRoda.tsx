@@ -4,7 +4,7 @@ import moment from "moment";
 import dynamic from "next/dynamic";
 import { DashboardContext } from "../Pages/Index";
 import { isArray } from "lodash";
-import { Card, Radio } from "antd";
+import { Card, Radio, Spin } from "antd";
 
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -62,9 +62,12 @@ export default function ChartTotalPengukuranKepingRoda({ series }: any) {
       width: 3,
     },
     yaxis: {
-      tickAmount: 5,
-      floating: false,
+      // tickAmount: 5,
+      // floating: false,
       min: 0,
+      labels: {
+        formatter: (value: any) => value?.toFixed(0), // Rounds to two decimal places
+      },
     },
     xaxis: {
       labels: {
@@ -77,18 +80,20 @@ export default function ChartTotalPengukuranKepingRoda({ series }: any) {
 
   return (
     <div className="my-8">
-      <Card>
-        <div className="flex justify-between gap-4">
-          <p>History Pengukuran <b>{state.kepingRoda ?? "-"}</b></p>
-        </div>
-        <ReactApexChart
-          type="line"
-          options={options}
-          series={chartSeries ?? []}
-          width="100%"
-          height={400}
-        />
-      </Card>
+      <Spin spinning={resSeriesKepingRodaMaintenanceSummary?.isLoading}>
+        <Card>
+          <div className="flex justify-between gap-4">
+            <p>History Pengukuran <b>{state.kepingRoda ?? "-"}</b></p>
+          </div>
+          <ReactApexChart
+            type="line"
+            options={options}
+            series={chartSeries ?? []}
+            width="100%"
+            height={400}
+          />
+        </Card>
+      </Spin>
     </div>
   );
 }
