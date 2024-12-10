@@ -326,7 +326,7 @@ export default function ModalSparepart({
             />
           </Form.Item>
 
-          {selectedAssetType === "Bogie" && (
+          {/* {selectedAssetType === "Bogie" && (
             <Form.Item
               label="Tipe Bogie"
               name="bogie"
@@ -342,7 +342,7 @@ export default function ModalSparepart({
                 }}
               />
             </Form.Item>
-          )}
+          )} */}
 
           {selectedAssetType === "Gerbong" && (
             <Form.Item
@@ -408,7 +408,7 @@ export default function ModalSparepart({
               placeholder="Pilih Status"
               allowClear
               options={StatusTypeOptions}
-              defaultValue={"active"}
+              // defaultValue={"active"}
               // onChange={(value) => {
               //   form.setFieldValue("bogie", value);
               //   form.setFieldValue("parent_asset_id", undefined);
